@@ -6,9 +6,8 @@ import type {
   Question,
 } from "@/lib/types";
 import { id } from "@/lib/data/store";
-// Real build: send COURSE_BUILDER_SYSTEM + MODEL_SETTINGS (temperature 0) to Claude and
-// validate the JSON against the course schema before persisting. See lib/ai/config.ts.
 import { COURSE_BUILDER_SYSTEM, MODEL_SETTINGS } from "./config";
+import { aiEnabled, generateJson } from "./anthropic";
 
 // Course builder (PRD §8.1).
 //
@@ -159,7 +158,87 @@ function blueprintQuestions(kind: "pretest" | "posttest", skill: string): Omit<Q
   ];
 }
 
-export function generateCourse(input: CourseBuilderInput, ownerStaffId: string): GeneratedCourse {
+// Entry point. Uses real Claude when ANTHROPIC_API_KEY is set; otherwise (and on ANY
+// error) falls back to the deterministic generator so the builder always works.
+export async function generateCourse(input: CourseBuilderInput, ownerStaffId: string): Promise<GeneratedCourse> {
+  if (aiEnabled()) {
+    try {
+      return await generateCourseWithAI(input, ownerStaffId);
+    } catch {
+      // fall back to deterministic
+    }
+  }
+  return generateCourseDeterministic(input, ownerStaffId);
+}
+
+async function generateCourseWithAI(input: CourseBuilderInput, ownerStaffId: string): Promise<GeneratedCourse> {
+  const lessonCount = Math.max(1, Math.min(6, input.lessonCount || 4));
+  const user = `Create a parent course as JSON.
+Title: ${input.title}
+Description: ${input.description}
+Target outcomes: ${input.outcomes}
+Audience: ${input.audience || "parents"}
+Number of lessons: ${lessonCount}
+
+Return ONLY this JSON shape (no prose):
+{
+  "description": string,
+  "outcomes": string,
+  "lessons": [ { "title": string, "html": string (one or two <p> paragraphs of real ABA-informed teaching content), "check": { "prompt": string, "type": "true_false"|"multiple_choice", "options": string[], "answerIndex": number } } ],
+  "pretest": [ { "prompt": string, "type": "true_false"|"multiple_choice", "options": string[], "answerIndex": number } ],
+  "posttest": [ { "prompt": string, "type": "true_false"|"multiple_choice", "options": string[], "answerIndex": number } ]
+}
+Make pretest and posttest share the same constructs. Keep content concrete and home-based.`;
+
+  const data = await generateJson({ system: COURSE_BUILDER_SYSTEM, user, model: MODEL_SETTINGS.model });
+  if (!data || !Array.isArray(data.lessons) || data.lessons.length === 0) throw new Error("bad shape");
+
+  const courseId = id("course");
+  const course: Course = {
+    id: courseId, ownerStaffId,
+    title: input.title || "Untitled Course",
+    description: String(data.description || input.description || ""),
+    outcomes: String(data.outcomes || input.outcomes || ""),
+    teacherInstructions: "AI-generated draft — review and tailor the examples to each family before publishing.",
+    isTemplate: false, category: "Generated", status: "draft",
+    estimatedDuration: `~${data.lessons.length * 12} min`, tags: ["aba", "reinforcement"],
+  };
+
+  const lessons: Lesson[] = [];
+  const contentBlocks: ContentBlock[] = [];
+  const assessments: Assessment[] = [];
+  const questions: Question[] = [];
+
+  const mkQ = (assessmentId: string, q: any, orderIndex: number): Question => {
+    const type = q?.type === "multiple_choice" ? "multiple_choice" : "true_false";
+    const options = Array.isArray(q?.options) && q.options.length ? q.options.map(String) : type === "true_false" ? ["True", "False"] : ["Option A", "Option B"];
+    const ans = Number.isInteger(q?.answerIndex) ? Math.max(0, Math.min(options.length - 1, q.answerIndex)) : 0;
+    return { id: id("q"), assessmentId, orderIndex, type, prompt: String(q?.prompt || "Question"), options, answerKey: [ans], scored: true };
+  };
+
+  const preId = id("asmt");
+  assessments.push({ id: preId, courseId, kind: "pretest", lessonId: null, title: "Pre-test" });
+  (Array.isArray(data.pretest) ? data.pretest : []).forEach((q: any, i: number) => questions.push(mkQ(preId, q, i)));
+  if (!questions.some((q) => q.assessmentId === preId)) questions.push(mkQ(preId, { type: "true_false", prompt: "Breaking a skill into small steps makes it easier to teach.", answerIndex: 0 }, 0));
+
+  data.lessons.slice(0, 6).forEach((l: any, i: number) => {
+    const lessonId = id("lesson");
+    lessons.push({ id: lessonId, courseId, orderIndex: i, title: `Lesson ${i + 1}: ${String(l?.title || "Lesson")}`, teacherInstructions: "Tailor the examples to the family's routines." });
+    contentBlocks.push({ id: id("cb"), lessonId, orderIndex: 0, type: "rich_text", payload: { html: String(l?.html || "<p></p>") } });
+    const lcId = id("asmt");
+    assessments.push({ id: lcId, courseId, kind: "lesson_check", lessonId, title: `Lesson ${i + 1} Check` });
+    questions.push(mkQ(lcId, l?.check, 0));
+  });
+
+  const postId = id("asmt");
+  assessments.push({ id: postId, courseId, kind: "posttest", lessonId: null, title: "Post-test" });
+  (Array.isArray(data.posttest) ? data.posttest : []).forEach((q: any, i: number) => questions.push(mkQ(postId, q, i)));
+  if (!questions.some((q) => q.assessmentId === postId)) questions.push(mkQ(postId, { type: "true_false", prompt: "A task analysis breaks a skill into smaller steps.", answerIndex: 0 }, 0));
+
+  return { course, lessons, contentBlocks, assessments, questions };
+}
+
+function generateCourseDeterministic(input: CourseBuilderInput, ownerStaffId: string): GeneratedCourse {
   const courseId = id("course");
   const lessonCount = Math.max(1, Math.min(6, input.lessonCount || 4));
   const skill = (input.title || "this skill").replace(/\s*course\s*$/i, "").trim() || "this skill";
