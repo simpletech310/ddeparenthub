@@ -1,9 +1,31 @@
-# DDE Parent Hub — MVP (Walking Skeleton)
+# DDE Parent Hub
 
 A mobile-first PWA for **Data Driven Educators** implementing one connected loop for parents:
-**Understand → Learn → Track**. This is a local-first MVP — it runs with **no Supabase and no
-Anthropic key**. Data persists to a local JSON store and AI is stubbed with schema-shaped
-responses. Both sit behind interfaces so real Supabase + Claude drop in later.
+**Understand → Learn → Track**.
+
+## 🚀 Live: https://dde-parent-hub.vercel.app
+
+Deployed on **Vercel** with **Supabase** persistence and **Anthropic** (real AI course builder).
+Sign in with a demo account (password `demo`): `celia@dde.example` (admin), `marcus@dde.example`
+(staff, assigned to the Gomez family), `maria@example.com` (parent).
+
+### Production architecture
+- **Persistence**: whole app state is a single JSON document in a private **Supabase Storage** bucket
+  (`app-state/db.json`), accessed via REST. The data layer is fully async (`lib/data/`).
+- **Auth**: HMAC-signed session cookie (`SESSION_SECRET`) — forgery-proof. Demo accounts for now;
+  Supabase Auth is the next step.
+- **AI**: `generateCourse` calls Claude when `ANTHROPIC_API_KEY` is set, with a deterministic fallback.
+- **Access control (privacy)**: family-scoped in `lib/auth/access.ts` — parent→own family,
+  staff→assigned families, admin→all. Verified via `/api/documents` + `/api/goals`.
+
+### Env vars (set in Vercel + `.env.local` locally)
+`SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
+`SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `SESSION_SECRET`. Redeploy with
+`npx vercel --prod`. **Rotate any secrets shared in plaintext.**
+
+### Local dev
+Runs with **no env** (in-memory store + deterministic AI), or with `.env.local` to use real
+Supabase + Claude. Both behind interfaces.
 
 ## Run it
 
