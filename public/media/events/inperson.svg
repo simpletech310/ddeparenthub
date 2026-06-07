@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280">
+  <rect width="640" height="280" fill="#fff4ed"/>
+  <rect y="200" width="640" height="80" fill="#fec8aa"/>
+  <rect x="150" y="90" width="160" height="120" fill="#f94d16"/>
+  <polygon points="150,90 230,40 310,90" fill="#c2240c"/>
+  <rect x="210" y="150" width="40" height="60" fill="#fff4ed"/>
+  <circle cx="430" cy="120" r="34" fill="#2a9794"/>
+  <path d="M390 210c0-24 18-40 40-40s40 16 40 40z" fill="#2a9794"/>
+  <text x="32" y="250" font-family="system-ui, sans-serif" font-size="22" font-weight="700" fill="#7c1d12">In-person at DDE</text>
+</svg>

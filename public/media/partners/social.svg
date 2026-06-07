@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280">
+  <rect width="640" height="280" fill="#fff4ed"/>
+  <circle cx="250" cy="120" r="46" fill="#fb6f3c"/>
+  <circle cx="360" cy="120" r="46" fill="#2a9794"/>
+  <circle cx="305" cy="170" r="46" fill="#fda174"/>
+  <circle cx="250" cy="120" r="16" fill="#fff"/>
+  <circle cx="360" cy="120" r="16" fill="#fff"/>
+  <circle cx="305" cy="170" r="16" fill="#fff"/>
+  <text x="32" y="250" font-family="system-ui, sans-serif" font-size="22" font-weight="700" fill="#7c1d12">Social Skills Group</text>
+</svg>

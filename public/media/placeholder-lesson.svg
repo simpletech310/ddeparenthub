@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" rx="16" fill="#d6f0ee"/>
+  <circle cx="320" cy="150" r="54" fill="#7accc8"/>
+  <path d="M150 300l90-110 70 70 60-80 120 120z" fill="#46b0ad"/>
+  <text x="320" y="335" font-family="system-ui, sans-serif" font-size="22" fill="#1d6160" text-anchor="middle">Lesson media placeholder</text>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280">
+  <rect width="640" height="280" fill="#f7faf9"/>
+  <circle cx="180" cy="150" r="44" fill="#fb6f3c"/>
+  <rect x="280" y="100" width="90" height="90" rx="18" fill="#2a9794"/>
+  <polygon points="470,190 520,100 570,190" fill="#7accc8"/>
+  <circle cx="430" cy="90" r="22" fill="#fda174"/>
+  <text x="32" y="250" font-family="system-ui, sans-serif" font-size="22" font-weight="700" fill="#194241">Sensory Play Gym</text>
+</svg>

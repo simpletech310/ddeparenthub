@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#d6f0ee"/>
+  <circle cx="200" cy="120" r="56" fill="#fde68a"/>
+  <circle cx="182" cy="112" r="7" fill="#194241"/>
+  <circle cx="218" cy="112" r="7" fill="#194241"/>
+  <path d="M178 138c8 12 36 12 44 0" fill="none" stroke="#194241" stroke-width="6" stroke-linecap="round"/>
+  <path d="M120 300c0-44 36-80 80-80s80 36 80 80z" fill="#2a9794"/>
+  <circle cx="300" cy="70" r="18" fill="#fb6f3c"/>
+  <text x="200" y="285" font-family="system-ui, sans-serif" font-size="16" fill="#fff" text-anchor="middle">Snack-time practice 🎉</text>
+</svg>

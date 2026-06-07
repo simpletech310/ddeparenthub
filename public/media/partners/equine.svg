@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280">
+  <rect width="640" height="280" fill="#eef9f8"/>
+  <rect y="200" width="640" height="80" fill="#aee0dd"/>
+  <circle cx="540" cy="70" r="34" fill="#fde68a"/>
+  <!-- simple horse silhouette -->
+  <path d="M250 210c0-40 18-66 50-74l18-28 14 8-8 22c26 4 50 22 56 52l22 4-2 16-30-2c-2 18-16 32-36 36v-30h-16v30h-20v-34c-18-6-30-18-34-34l-14 6-4-14 14-6z" fill="#1f7977"/>
+  <text x="32" y="250" font-family="system-ui, sans-serif" font-size="22" font-weight="700" fill="#194241">Riverside Stables</text>
+</svg>
