@@ -33,7 +33,14 @@ export function RecommendationList({ recs }: { recs: Recommendation[] }) {
               <p className="mt-1 text-sm italic text-ink-600">{r.partner.tagline}</p>
             )}
 
-            <p className="mt-2 text-sm text-brand-700">{r.explanation}</p>
+            {r.acceptsInsurance && (
+              <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-teal-50 px-2.5 py-1 text-xs font-bold text-teal-700">
+                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                Accepts your insurance
+              </span>
+            )}
+
+            <p className="mt-2 text-sm text-ink-600">{r.explanation}</p>
 
             {r.kind === "partner" && r.partner && r.partner.insuranceAccepted.length > 0 && (
               <p className="mt-2 text-xs text-ink-600">

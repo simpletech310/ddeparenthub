@@ -61,7 +61,7 @@ export async function setUserLanguage(userId: string, lang: "en" | "es"): Promis
 // Update the acting user's own profile (name, staff title, language, photo).
 export async function updateUserProfile(
   userId: string,
-  patch: Partial<Pick<User, "name" | "title" | "preferredLanguage" | "avatarUrl">>
+  patch: Partial<Pick<User, "name" | "title" | "preferredLanguage" | "avatarUrl" | "insurance" | "focus" | "goals">>
 ): Promise<void> {
   await saveDb((db) => {
     const u = db.users.find((x) => x.id === userId);
@@ -513,7 +513,7 @@ export async function addChild(user: User, familyId: string, data: { displayName
 export async function updateChildProfile(
   user: User,
   childId: string,
-  patch: Partial<Pick<Child, "displayName" | "dob" | "avatarUrl" | "interestTags" | "needTags" | "temperament" | "strengths" | "notes">>
+  patch: Partial<Pick<Child, "displayName" | "dob" | "avatarUrl" | "interestTags" | "needTags" | "communicationStyle" | "aspirations" | "temperament" | "strengths" | "notes">>
 ): Promise<void> {
   const child = await getChildById(user, childId);
   if (!child || !canWriteFamily(user, child.familyId)) throw new AccessError("No write access to this child.");

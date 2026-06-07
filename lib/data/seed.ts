@@ -52,6 +52,8 @@ function seedUsers(): User[] {
     {
       id: MARIA_ID, role: "parent", email: "maria@example.com", name: "Maria Gomez",
       preferredLanguage: "en", status: "active", password: "demo", familyId: FAMILY_ID,
+      insurance: ["Medi-Cal", "Aetna"], focus: ["communication", "social", "outdoor_time"],
+      goals: "We'd love Leo to ask for what he wants and enjoy playing near other kids.",
     },
     {
       id: CARLOS_ID, role: "parent", email: "carlos@example.com", name: "Carlos Gomez",
@@ -238,8 +240,10 @@ function seedChildren(): Child[] {
   return [
     {
       id: LEO_ID, familyId: FAMILY_ID, displayName: "Leo", dob: "2019-04-12",
-      interestTags: ["animals", "horses", "outdoors"],
-      needTags: ["communication", "social", "group_work", "outdoor_time"],
+      interestTags: ["animals", "horses", "outdoors", "water", "movement"],
+      needTags: ["communication", "social", "group_work", "outdoor_time", "sensory"],
+      communicationStyle: "emerging",
+      aspirations: "Asking for things with words and playing alongside other kids.",
       temperament: "Energetic and affectionate; calmer outdoors and around animals.",
       strengths: "Great visual memory; loves being helpful with chores.",
       notes: "Gets overwhelmed in loud indoor spaces.",
@@ -247,6 +251,7 @@ function seedChildren(): Child[] {
     {
       id: SOFIA_ID, familyId: FAMILY_ID, displayName: "Sofia", dob: "2021-09-03",
       interestTags: ["music", "art"], needTags: [],
+      communicationStyle: "verbal", aspirations: "",
       temperament: "Curious and gentle.", strengths: "Loves drawing.", notes: "",
     },
   ];

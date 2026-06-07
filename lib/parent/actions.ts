@@ -15,6 +15,7 @@ import {
   reprocessDocument,
   setUserLanguage,
   updateChildProfile,
+  updateUserProfile,
 } from "@/lib/data/repos";
 import {
   acceptFamilyConsent,
@@ -48,12 +49,27 @@ export async function updateChildProfileAction(formData: FormData): Promise<void
     dob: String(formData.get("dob") ?? "").trim() || undefined,
     interestTags: tags(formData.get("interestTags")),
     needTags: tags(formData.get("needTags")),
+    communicationStyle: String(formData.get("communicationStyle") ?? "").trim() || undefined,
+    aspirations: String(formData.get("aspirations") ?? "").trim(),
     temperament: String(formData.get("temperament") ?? "").trim(),
     strengths: String(formData.get("strengths") ?? "").trim(),
     notes: String(formData.get("notes") ?? "").trim(),
   });
   revalidatePath(`/parent/children/${childId}`);
   revalidatePath("/parent/resources");
+  revalidatePath("/parent");
+}
+
+// Parent profile that improves recommendations: insurance, family focus, goals.
+export async function updateParentProfileAction(formData: FormData): Promise<void> {
+  const user = await requireRole("parent");
+  const insurance = String(formData.get("insurance") ?? "").split("|").map((s) => s.trim()).filter(Boolean);
+  const focus = tags(formData.get("focus"));
+  const goals = String(formData.get("goals") ?? "").trim();
+  await updateUserProfile(user.id, { insurance, focus, goals });
+  revalidatePath("/parent/settings");
+  revalidatePath("/parent/resources");
+  revalidatePath("/parent");
 }
 
 export async function deleteChildAction(formData: FormData): Promise<void> {

@@ -1,9 +1,11 @@
 import { requireRole } from "@/lib/auth/session";
 import { getFamily } from "@/lib/data/families";
-import { deleteFamilyDataAction, updateSettingsAction } from "@/lib/parent/actions";
+import { deleteFamilyDataAction, updateParentProfileAction, updateSettingsAction } from "@/lib/parent/actions";
 import { updateMyAvatarAction, updateMyProfileAction } from "@/lib/account/actions";
 import { AvatarUpload } from "@/components/AvatarUpload";
 import { PageHeader } from "@/components/PageHeader";
+import { StringPicker, TagPicker } from "@/components/ChipSelect";
+import { INSURANCE_OPTIONS, PARENT_FOCUS_OPTIONS } from "@/lib/data/taxonomy";
 
 export default async function SettingsPage() {
   const user = await requireRole("parent");
@@ -22,6 +24,28 @@ export default async function SettingsPage() {
         <h2 className="font-display font-bold text-ink-900">Your name</h2>
         <input name="name" className="input" defaultValue={user.name} />
         <button className="btn-primary w-full" type="submit">Save name</button>
+      </form>
+
+      {/* Family profile — improves recommendations */}
+      <form action={updateParentProfileAction} className="card space-y-5">
+        <div>
+          <h2 className="font-display font-bold text-ink-900">Help us recommend better 🎯</h2>
+          <p className="text-sm text-ink-500">A few details about your family so our matches actually fit.</p>
+        </div>
+        <div>
+          <label className="label">Insurance you have</label>
+          <p className="mb-2 text-xs text-ink-400">We'll highlight partners that accept it.</p>
+          <StringPicker name="insurance" options={INSURANCE_OPTIONS} initial={user.insurance ?? []} />
+        </div>
+        <div>
+          <label className="label">What matters most to your family right now?</label>
+          <TagPicker name="focus" options={PARENT_FOCUS_OPTIONS} initial={user.focus ?? []} />
+        </div>
+        <div>
+          <label className="label" htmlFor="goals">Anything you'd love to achieve? (optional)</label>
+          <textarea id="goals" name="goals" className="input min-h-[60px]" defaultValue={user.goals ?? ""} placeholder="e.g. more independence at home, a calmer morning routine" />
+        </div>
+        <button className="btn-primary w-full" type="submit">Save family profile</button>
       </form>
 
       <form action={updateSettingsAction} className="card space-y-4">

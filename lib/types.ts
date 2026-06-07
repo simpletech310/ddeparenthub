@@ -22,6 +22,10 @@ export interface User {
   title?: string;
   // Profile photo (small data URL, resized client-side). Optional.
   avatarUrl?: string;
+  // Parent profile — feeds recommendations (insurance match, family goals).
+  insurance?: string[]; // matches partner.insuranceAccepted
+  focus?: string[]; // what the family wants to achieve (need tags)
+  goals?: string; // freeform "what you want to achieve"
 }
 
 // ---------- Family & access ----------
@@ -221,7 +225,10 @@ export interface Child {
   avatarUrl?: string;
   // Profile — drives deterministic resource recommendations.
   interestTags: string[]; // e.g. ["animals","horses","outdoors","music"]
-  needTags: string[]; // e.g. ["communication","social","group_work","outdoor_time","sensory"]
+  needTags: string[]; // supports that help, e.g. ["communication","social","sensory"]
+  // Surface-level, sensitive context to help match resources.
+  communicationStyle?: string; // see COMMUNICATION_OPTIONS
+  aspirations?: string; // "what we'd love to see them grow in" (freeform)
   temperament: string; // freeform, parent's words
   strengths: string; // freeform
   notes: string; // anything else helpful
