@@ -7,6 +7,7 @@ import {
   listMyGoals,
 } from "@/lib/data/repos";
 import { familyInsights, learningInsights } from "@/lib/data/insights";
+import { Avatar } from "@/components/Avatar";
 
 export default async function ParentDashboard() {
   const user = await requireRole("parent");
@@ -47,14 +48,17 @@ export default async function ParentDashboard() {
 
   return (
     <div className="space-y-6">
-      <section>
-        <p className="eyebrow">Welcome back</p>
-        <h1 className="mt-1 font-display text-3xl font-bold text-ink-900">
-          Hi, {user.name.split(" ")[0]} 👋
-        </h1>
-        <p className="mt-1 text-sm text-ink-500">
-          One connected loop — understand the plan, learn the skills, track the growth.
-        </p>
+      <section className="flex items-center gap-4">
+        <Avatar name={user.name} src={user.avatarUrl} size="lg" ring />
+        <div>
+          <p className="eyebrow">Welcome back</p>
+          <h1 className="mt-1 font-display text-3xl font-bold text-ink-900">
+            Hi, {user.name.split(" ")[0]} 👋
+          </h1>
+          <p className="mt-1 text-sm text-ink-500">
+            Understand the plan, learn the skills, track the growth.
+          </p>
+        </div>
       </section>
 
       {/* Data-driven snapshot — hero gradient */}

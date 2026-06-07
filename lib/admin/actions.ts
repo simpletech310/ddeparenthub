@@ -40,7 +40,7 @@ export async function toggleUserStatusAction(formData: FormData): Promise<void> 
   const target = await getUser(userId);
   if (!target) return;
   await setUserStatus(userId, target.status === "active" ? "deactivated" : "active");
-  revalidatePath("/admin");
+  revalidatePath("/admin/users");
 }
 
 // ---- Partner directory ----
@@ -116,6 +116,6 @@ export async function createUserAction(formData: FormData): Promise<void> {
   const title = String(formData.get("title") ?? "").trim() || undefined;
   const familyId = String(formData.get("familyId") ?? "") || null;
   if (name && email) await createUser({ role, name, email, title, familyId });
-  revalidatePath("/admin");
+  revalidatePath("/admin/users");
   revalidatePath("/admin/families");
 }

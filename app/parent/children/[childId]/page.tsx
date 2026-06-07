@@ -3,8 +3,10 @@ import { notFound } from "next/navigation";
 import { requireRole } from "@/lib/auth/session";
 import { getChildById } from "@/lib/data/repos";
 import { recommendationsForChild } from "@/lib/data/recommendations";
-import { deleteChildAction, updateChildProfileAction } from "@/lib/parent/actions";
+import { deleteChildAction, updateChildAvatarAction, updateChildProfileAction } from "@/lib/parent/actions";
 import { RecommendationList } from "@/components/RecommendationList";
+import { AvatarUpload } from "@/components/AvatarUpload";
+import { PageHeader } from "@/components/PageHeader";
 
 export default async function ChildProfile({ params }: { params: { childId: string } }) {
   const user = await requireRole("parent");
@@ -14,13 +16,14 @@ export default async function ChildProfile({ params }: { params: { childId: stri
 
   return (
     <div className="space-y-5">
-      <div>
-        <Link href="/parent/children" className="text-sm text-ink-600">← Children</Link>
-        <h1 className="mt-1 text-xl font-bold text-brand-900">{child.displayName}'s profile</h1>
-        <p className="text-sm text-ink-600">
-          The more we know, the better we can match real DDE classes and partner resources.
-        </p>
-      </div>
+      <PageHeader backHref="/parent/children" backLabel="Children" eyebrow="Profile"
+        title={`${child.displayName}'s profile`}
+        subtitle="The more we know, the better we can match real DDE classes and partner resources." />
+
+      <section className="card">
+        <h2 className="mb-3 font-display font-bold text-ink-900">Photo</h2>
+        <AvatarUpload name={child.displayName} currentSrc={child.avatarUrl} action={updateChildAvatarAction} hiddenFields={{ childId: child.id }} />
+      </section>
 
       <form action={updateChildProfileAction} className="card space-y-4">
         <input type="hidden" name="childId" value={child.id} />

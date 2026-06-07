@@ -9,6 +9,7 @@ import {
 } from "@/lib/data/repos";
 import { recommendationsForChild } from "@/lib/data/recommendations";
 import { familyInsights } from "@/lib/data/insights";
+import { Avatar } from "@/components/Avatar";
 import type { User } from "@/lib/types";
 
 const RATING_LABEL = ["", "Struggling", "Emerging", "Developing", "Progressing", "Mastering"];
@@ -62,14 +63,32 @@ export async function FamilyFile({ user, familyId }: { user: User; familyId: str
       </section>
 
       <section className="card">
-        <h2 className="font-semibold text-brand-900">Family team</h2>
-        <p className="mt-1 text-sm text-brand-700">
-          <span className="font-medium">Parents:</span> {parents.map((p) => p.name).join(", ") || "—"}
-        </p>
-        <p className="text-sm text-brand-700">
-          <span className="font-medium">Assigned staff:</span> {staff.map((s) => s.name).join(", ") || "—"}
-        </p>
-        <p className="mt-1 text-xs text-ink-400">
+        <h2 className="mb-3 font-display font-bold text-ink-900">Family team</h2>
+        <div className="space-y-3">
+          <div>
+            <p className="eyebrow mb-1.5">Parents</p>
+            <div className="flex flex-wrap gap-3">
+              {parents.length ? parents.map((p) => (
+                <span key={p.id} className="flex items-center gap-2">
+                  <Avatar name={p.name} src={p.avatarUrl} size="xs" />
+                  <span className="text-sm text-ink-700">{p.name}</span>
+                </span>
+              )) : <span className="text-sm text-ink-400">—</span>}
+            </div>
+          </div>
+          <div>
+            <p className="eyebrow mb-1.5">Assigned staff</p>
+            <div className="flex flex-wrap gap-3">
+              {staff.length ? staff.map((s) => (
+                <span key={s.id} className="flex items-center gap-2">
+                  <Avatar name={s.name} src={s.avatarUrl} size="xs" />
+                  <span className="text-sm text-ink-700">{s.name}{s.title ? ` · ${s.title}` : ""}</span>
+                </span>
+              )) : <span className="text-sm text-ink-400">—</span>}
+            </div>
+          </div>
+        </div>
+        <p className="mt-3 text-xs text-ink-400">
           Progress below is shared — every assigned staff member sees the same consistent record.
         </p>
       </section>
@@ -77,8 +96,9 @@ export async function FamilyFile({ user, familyId }: { user: User; familyId: str
       {childBlocks.map(({ child, goals, recs }) => {
         return (
           <section key={child.id} className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-brand-900">{child.displayName}</h2>
+            <div className="flex items-center gap-3">
+              <Avatar name={child.displayName} src={child.avatarUrl} size="md" ring />
+              <h2 className="font-display text-lg font-bold text-ink-900">{child.displayName}</h2>
               {child.dob && <span className="text-xs text-ink-500">DOB {child.dob}</span>}
             </div>
 

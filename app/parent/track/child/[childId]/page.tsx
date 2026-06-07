@@ -4,6 +4,7 @@ import { requireRole } from "@/lib/auth/session";
 import { getChildById, listGoalProgress, listGoalsForChild } from "@/lib/data/repos";
 import { childInsights } from "@/lib/data/insights";
 import { addGoalAction, deleteGoalAction } from "@/lib/parent/actions";
+import { Avatar } from "@/components/Avatar";
 
 const RATING_LABEL = ["", "Struggling", "Emerging", "Developing", "Progressing", "Mastering"];
 
@@ -21,8 +22,11 @@ export default async function ChildTrack({ params }: { params: { childId: string
   return (
     <div className="space-y-5">
       <div>
-        <Link href="/parent/track" className="text-sm text-ink-600">← Track</Link>
-        <h1 className="mt-1 text-xl font-bold text-brand-900">{child.displayName}'s progress</h1>
+        <Link href="/parent/track" className="text-sm font-medium text-brand-600 hover:text-brand-700">← Track</Link>
+        <div className="mt-1.5 flex items-center gap-3">
+          <Avatar name={child.displayName} src={child.avatarUrl} size="lg" ring />
+          <h1 className="font-display text-2xl font-bold text-ink-900">{child.displayName}'s progress</h1>
+        </div>
       </div>
 
       {/* Insight summary */}

@@ -63,6 +63,17 @@ export async function deleteChildAction(formData: FormData): Promise<void> {
   revalidatePath("/parent/track");
 }
 
+export async function updateChildAvatarAction(formData: FormData): Promise<void> {
+  const user = await requireRole("parent");
+  const childId = String(formData.get("childId") ?? "");
+  const avatarUrl = String(formData.get("avatarUrl") ?? "").trim();
+  if (!avatarUrl.startsWith("data:image/")) return;
+  await updateChildProfile(user, childId, { avatarUrl });
+  revalidatePath(`/parent/children/${childId}`);
+  revalidatePath("/parent/children");
+  revalidatePath("/parent");
+}
+
 export async function uploadDocumentAction(formData: FormData): Promise<void> {
   const user = await requireRole("parent");
   if (!user.familyId) return;

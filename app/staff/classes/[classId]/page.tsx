@@ -4,6 +4,7 @@ import { requireRole } from "@/lib/auth/session";
 import { getClass, getUser, listEnrollmentsByClass } from "@/lib/data/repos";
 import { classRoster, lessonCheckPassRates } from "@/lib/data/reporting";
 import { checkInAction } from "@/lib/staff/actions";
+import { Avatar } from "@/components/Avatar";
 
 export default async function ClassRoster({ params }: { params: { classId: string } }) {
   await requireRole("staff");
@@ -12,7 +13,10 @@ export default async function ClassRoster({ params }: { params: { classId: strin
 
   const enrollmentsRaw = await listEnrollmentsByClass(cls.id);
   const enrollments = await Promise.all(
-    enrollmentsRaw.map(async (e) => ({ e, name: (await getUser(e.parentId))?.name ?? "Parent" }))
+    enrollmentsRaw.map(async (e) => {
+      const u = await getUser(e.parentId);
+      return { e, name: u?.name ?? "Parent", avatarUrl: u?.avatarUrl };
+    })
   );
   const roster = await classRoster(cls.id);
   const passRates = await lessonCheckPassRates(cls.id);
@@ -66,11 +70,13 @@ export default async function ClassRoster({ params }: { params: { classId: strin
       <section className="card">
         <h2 className="mb-2 font-semibold text-brand-900">Attendance check-in</h2>
         <ul className="space-y-2">
-          {enrollments.map(({ e, name }) => {
+          {enrollments.map(({ e, name, avatarUrl }) => {
             return (
               <li key={e.id} className="flex items-center justify-between gap-2">
-                <div>
-                  <p className="text-sm font-medium text-brand-800">{name}</p>
+                <div className="flex items-center gap-2.5">
+                  <Avatar name={name} src={avatarUrl} size="sm" />
+                  <div>
+                  <p className="text-sm font-medium text-ink-800">{name}</p>
                   <p className="text-[11px] text-ink-400">
                     {e.attendance === "present"
                       ? `Checked in${e.checkedInAt ? " " + new Date(e.checkedInAt).toLocaleTimeString() : ""}`
@@ -78,6 +84,7 @@ export default async function ClassRoster({ params }: { params: { classId: strin
                       ? "Marked absent"
                       : "Not checked in"}
                   </p>
+                  </div>
                 </div>
                 <div className="flex gap-1">
                   {(["present", "absent"] as const).map((s) => (

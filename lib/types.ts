@@ -20,6 +20,8 @@ export interface User {
   familyId?: string | null;
   // Staff title shown in the UI (e.g. "BCBA", "Behavior Technician").
   title?: string;
+  // Profile photo (small data URL, resized client-side). Optional.
+  avatarUrl?: string;
 }
 
 // ---------- Family & access ----------
@@ -215,6 +217,8 @@ export interface Child {
   familyId: string;
   displayName: string;
   dob?: string;
+  // Profile photo (small data URL, resized client-side). Optional.
+  avatarUrl?: string;
   // Profile — drives deterministic resource recommendations.
   interestTags: string[]; // e.g. ["animals","horses","outdoors","music"]
   needTags: string[]; // e.g. ["communication","social","group_work","outdoor_time","sensory"]

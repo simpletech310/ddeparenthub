@@ -6,6 +6,7 @@ import {
   listMyDocuments,
 } from "@/lib/data/repos";
 import { childInsights } from "@/lib/data/insights";
+import { Avatar } from "@/components/Avatar";
 
 function trendIcon(t: "up" | "flat" | "down" | null) {
   return t === "up" ? "↗" : t === "down" ? "↘" : t === "flat" ? "→" : "";
@@ -46,9 +47,10 @@ export default async function TrackPage() {
               href={`/parent/track/child/${child.id}`}
               className="card block hover:border-brand-300"
             >
-              <div className="flex items-center justify-between">
-                <p className="font-semibold text-brand-900">{child.displayName}</p>
-                <span className="pill bg-brand-50 text-ink-600">Open →</span>
+              <div className="flex items-center gap-3">
+                <Avatar name={child.displayName} src={child.avatarUrl} size="md" ring />
+                <p className="flex-1 font-display font-bold text-ink-900">{child.displayName}</p>
+                <span className="pill bg-brand-50 text-brand-700">Open →</span>
               </div>
               <div className="mt-3 grid grid-cols-4 gap-2 text-center">
                 <Mini value={String(ins.goals)} label="Goals" />

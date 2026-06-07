@@ -1,70 +1,63 @@
+import Link from "next/link";
 import { requireRole } from "@/lib/auth/session";
 import { listUsers } from "@/lib/data/repos";
-import { toggleUserStatusAction } from "@/lib/admin/actions";
+import { listFamilies } from "@/lib/data/families";
+import { listPartners } from "@/lib/data/partners";
+import { courseAggregates } from "@/lib/data/reporting";
+import { recentActivity } from "@/lib/data/activity";
+import { StatHero } from "@/components/StatHero";
+import { ActivityFeed } from "@/components/ActivityFeed";
+import { PageHeader } from "@/components/PageHeader";
 
-const ROLE_STYLE: Record<string, string> = {
-  admin: "bg-accent-100 text-accent-700",
-  staff: "bg-brand-100 text-brand-700",
-  parent: "bg-brand-50 text-ink-600",
-};
+export default async function AdminDashboard() {
+  const user = await requireRole("admin");
+  const [users, families, partners, aggregates, activity] = await Promise.all([
+    listUsers(),
+    listFamilies(),
+    listPartners(true),
+    courseAggregates(),
+    recentActivity(user, 8),
+  ]);
+  const parents = users.filter((u) => u.role === "parent").length;
+  const staff = users.filter((u) => u.role === "staff").length;
+  const deltas = aggregates.map((a) => a.avgDelta).filter((d): d is number => d !== null);
+  const avgDelta = deltas.length ? Math.round((deltas.reduce((a, b) => a + b, 0) / deltas.length) * 10) / 10 : null;
 
-export default async function AdminUsers() {
-  const me = await requireRole("admin");
-  const users = await listUsers();
+  const quick = [
+    { href: "/admin/families", title: "Families", desc: "Create, assign staff", icon: "👨‍👩‍👧" },
+    { href: "/admin/partners", title: "Partners", desc: "Directory & matches", icon: "🤝" },
+    { href: "/admin/users", title: "Users", desc: "Staff & parents", icon: "👥" },
+    { href: "/admin/reporting", title: "Reporting", desc: "Outcomes & deltas", icon: "📊" },
+  ];
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h1 className="text-xl font-bold text-brand-900">User management</h1>
-        <p className="text-sm text-ink-600">
-          Manage staff and parent accounts. Admins cannot view any parent's private documents or
-          breakdowns — there is no override.
-        </p>
-      </div>
+    <div className="space-y-6">
+      <PageHeader eyebrow="Administration" title={`Welcome, ${user.name.split(" ")[0]}`} subtitle="Your organization at a glance." />
 
-      <section className="card overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-xs uppercase tracking-wide text-ink-500">
-              <th className="py-1.5">Name</th>
-              <th className="py-1.5">Role</th>
-              <th className="py-1.5">Status</th>
-              <th className="py-1.5"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((u) => (
-              <tr key={u.id} className="border-t border-brand-50">
-                <td className="py-2">
-                  <p className="font-medium text-brand-800">{u.name}</p>
-                  <p className="text-xs text-ink-500">{u.email}</p>
-                </td>
-                <td className="py-2">
-                  <span className={`pill capitalize ${ROLE_STYLE[u.role]}`}>{u.role}</span>
-                </td>
-                <td className="py-2">
-                  <span
-                    className={`pill ${
-                      u.status === "active" ? "bg-brand-50 text-brand-700" : "bg-accent-50 text-accent-700"
-                    }`}
-                  >
-                    {u.status}
-                  </span>
-                </td>
-                <td className="py-2 text-right">
-                  {u.id !== me.id && (
-                    <form action={toggleUserStatusAction} className="inline">
-                      <input type="hidden" name="userId" value={u.id} />
-                      <button className="text-xs font-medium text-ink-600 hover:underline" type="submit">
-                        {u.status === "active" ? "Deactivate" : "Reactivate"}
-                      </button>
-                    </form>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <StatHero
+        eyebrow="Organization"
+        stats={[
+          { value: String(families.length), label: "Families" },
+          { value: String(parents), label: "Parents" },
+          { value: String(staff), label: "Staff" },
+          { value: String(partners.filter((p) => p.status === "active").length), label: "Partners" },
+          { value: avgDelta === null ? "—" : `${avgDelta >= 0 ? "+" : ""}${avgDelta}`, label: "Avg growth" },
+        ]}
+      />
+
+      <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {quick.map((q) => (
+          <Link key={q.href} href={q.href} className="card card-hover text-center">
+            <div className="text-2xl">{q.icon}</div>
+            <p className="mt-1 font-display font-bold text-ink-900">{q.title}</p>
+            <p className="text-xs text-ink-400">{q.desc}</p>
+          </Link>
+        ))}
+      </section>
+
+      <section>
+        <h2 className="eyebrow mb-2">Recent activity</h2>
+        <ActivityFeed items={activity} />
       </section>
     </div>
   );

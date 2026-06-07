@@ -1,6 +1,9 @@
 import { requireRole } from "@/lib/auth/session";
 import { getFamily } from "@/lib/data/families";
 import { deleteFamilyDataAction, updateSettingsAction } from "@/lib/parent/actions";
+import { updateMyAvatarAction, updateMyProfileAction } from "@/lib/account/actions";
+import { AvatarUpload } from "@/components/AvatarUpload";
+import { PageHeader } from "@/components/PageHeader";
 
 export default async function SettingsPage() {
   const user = await requireRole("parent");
@@ -8,7 +11,18 @@ export default async function SettingsPage() {
 
   return (
     <div className="space-y-5">
-      <h1 className="text-xl font-bold text-brand-900">Settings</h1>
+      <PageHeader eyebrow="Account" title="Settings" subtitle="Your photo, name, and preferences." />
+
+      <section className="card">
+        <h2 className="mb-3 font-display font-bold text-ink-900">Your photo</h2>
+        <AvatarUpload name={user.name} currentSrc={user.avatarUrl} action={updateMyAvatarAction} />
+      </section>
+
+      <form action={updateMyProfileAction} className="card space-y-3">
+        <h2 className="font-display font-bold text-ink-900">Your name</h2>
+        <input name="name" className="input" defaultValue={user.name} />
+        <button className="btn-primary w-full" type="submit">Save name</button>
+      </form>
 
       <form action={updateSettingsAction} className="card space-y-4">
         <h2 className="font-semibold text-brand-900">Preferences</h2>

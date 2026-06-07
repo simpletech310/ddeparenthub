@@ -10,7 +10,7 @@ export default async function ParentLayout({ children }: { children: React.React
   if (!user.familyId) {
     return (
       <div className="min-h-screen">
-        <AppHeader name={user.name} roleLabel="Parent" homeHref="/parent" />
+        <AppHeader name={user.name} roleLabel="Parent" homeHref="/parent" avatarUrl={user.avatarUrl} />
         <div className="mx-auto max-w-md px-4 py-16 text-center">
           <div className="card">
             <h1 className="text-lg font-bold text-brand-900">Welcome to DDE Parent Hub</h1>
@@ -29,7 +29,7 @@ export default async function ParentLayout({ children }: { children: React.React
 
   return (
     <div className="min-h-screen pb-28">
-      <AppHeader name={user.name} roleLabel="Parent" homeHref="/parent" />
+      <AppHeader name={user.name} roleLabel="Parent" homeHref="/parent" avatarUrl={user.avatarUrl} />
       <div className="mx-auto max-w-3xl animate-fade-up px-4 py-6">{children}</div>
       <BottomNav />
     </div>
