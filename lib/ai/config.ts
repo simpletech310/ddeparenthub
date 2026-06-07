@@ -9,12 +9,13 @@
 //  - Bump PROMPT_VERSION when a prompt changes; that invalidates the cache so a single
 //    deliberate re-process produces the new (still deterministic) output.
 //
-// The current MVP runs a deterministic local pipeline (no network). When an Anthropic
-// key is added, call the model with MODEL_SETTINGS + these prompts + the JSON schemas;
-// nothing else in the app changes.
+// When an Anthropic key is configured, documents are processed by the real two-step
+// pipeline (extract -> render) in lib/ai/breakdown.ts using MODEL_SETTINGS + these prompts
+// + the JSON schemas. With no key (or on any error), a deterministic local renderer is used
+// so the app always produces a valid breakdown. Either way the result is cached once.
 // =====================================================================
 
-export const PROMPT_VERSION = "2026-06-06.1";
+export const PROMPT_VERSION = "2026-06-07.1";
 
 export const MODEL_SETTINGS = {
   model: "claude-sonnet-4-5",

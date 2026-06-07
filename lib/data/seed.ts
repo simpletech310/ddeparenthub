@@ -17,7 +17,7 @@ import type {
   Question,
   User,
 } from "@/lib/types";
-import { processDocument } from "@/lib/ai/breakdown";
+import { processDocumentDeterministic } from "@/lib/ai/breakdown";
 
 // Stable, hand-written IDs so cross-references resolve in the seed.
 const ADMIN_ID = "user_admin_celia";
@@ -273,7 +273,7 @@ function seedDocuments(): {
     storagePath: `${FAMILY_ID}/${LEO_ID}/Leo-IEP-2026.pdf`, status: "ready",
     retentionUntil: null, createdAt: new Date().toISOString(),
   };
-  const result = processDocument({ fileName: doc.fileName, docType: doc.docType });
+  const result = processDocumentDeterministic({ fileName: doc.fileName, docType: doc.docType });
   const breakdown: DocumentBreakdown = {
     id: "bd_leo_iep", documentId: doc.id, familyId: FAMILY_ID, summary: result.payload.summary.en,
     payload: result.payload, language: "en", contentHash: result.contentHash, promptVersion: result.promptVersion,

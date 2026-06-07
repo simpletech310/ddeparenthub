@@ -1,5 +1,12 @@
-import type { BreakdownPayload, DocType } from "@/lib/types";
-import { PROMPT_VERSION } from "./config";
+import type { BreakdownItem, BreakdownPayload, DocType } from "@/lib/types";
+import {
+  PROMPT_VERSION,
+  IEP_EXTRACT_SYSTEM,
+  IEP_RENDER_SYSTEM,
+  TRIENNIAL_EXTRACT_SYSTEM,
+  TRIENNIAL_RENDER_SYSTEM,
+} from "./config";
+import { aiEnabled, generateJson } from "./anthropic";
 import { extractText, hashText } from "./extractText";
 
 // Stubbed document-breakdown pipelines (PRD §5, §6, §8.2), implemented as the SAME
@@ -34,12 +41,138 @@ export interface ProcessResult {
 }
 
 // Route a document to the correct pipeline and return a fully cacheable result.
-export function processDocument(input: { fileName: string; docType: DocType }): ProcessResult {
+// When an Anthropic key is configured we run the real two-step pipeline (extract -> render)
+// with temperature 0; any failure falls back to the deterministic renderer so the app always
+// produces a valid breakdown. The result is cached by (contentHash, PROMPT_VERSION) upstream,
+// so a document is only ever processed once unless deliberately re-analyzed.
+export async function processDocument(input: { fileName: string; docType: DocType }): Promise<ProcessResult> {
   const { text } = extractText(input);
   const contentHash = hashText(`${PROMPT_VERSION}:${input.docType}:${text}`);
-  const built =
-    input.docType === "triennial" ? renderTriennial() : renderIep();
+
+  let built: { payload: BreakdownPayload; goalDrafts: GoalDraft[] } | null = null;
+  if (aiEnabled()) {
+    try {
+      built = await processWithAI(text, input.docType);
+    } catch {
+      built = null; // fall back below
+    }
+  }
+  if (!built) built = input.docType === "triennial" ? renderTriennial() : renderIep();
+
   return { ...built, contentHash, promptVersion: PROMPT_VERSION };
+}
+
+// Synchronous, offline, deterministic breakdown — used by the seed (cold start must not
+// depend on the network) and as the runtime fallback above.
+export function processDocumentDeterministic(input: { fileName: string; docType: DocType }): ProcessResult {
+  const { text } = extractText(input);
+  const contentHash = hashText(`${PROMPT_VERSION}:${input.docType}:${text}`);
+  const built = input.docType === "triennial" ? renderTriennial() : renderIep();
+  return { ...built, contentHash, promptVersion: PROMPT_VERSION };
+}
+
+// ---------------- Live two-step Claude pipeline ----------------
+
+const EXTRACT_SCHEMA_IEP = `Return JSON only with this shape (omit fields that are not stated):
+{"keyDates":[{"label":string,"date":"YYYY-MM-DD"}],
+ "goals":[{"domain":string,"verbatimText":string,"baseline":string,"target":string,"measure":string,"confidence":"high"|"low"}],
+ "services":[{"verbatimText":string}],
+ "accommodations":[{"verbatimText":string}],
+ "placement":string,
+ "suggestedCourseTags":[string]}`;
+
+const EXTRACT_SCHEMA_TRIENNIAL = `Return JSON only with this shape (omit fields that are not stated):
+{"keyDates":[{"label":string,"date":"YYYY-MM-DD"}],
+ "assessments":[{"verbatimText":string,"confidence":"high"|"low"}],
+ "eligibility":{"verbatimText":string},
+ "recommendations":[{"verbatimText":string}],
+ "suggestedCourseTags":[string]}`;
+
+const RENDER_SCHEMA = `Return JSON only, EXACTLY this shape:
+{"summary":{"en":string,"es":string},
+ "keyDates":[{"label":string,"date":"YYYY-MM-DD"}],
+ "questionsToAsk":[string],
+ "items":[{"category":string,"whatItSays":string,"whatItMeans":{"en":string,"es":string},"whatYouCanDo":{"en":string,"es":string},"confidence":"high"|"low"}],
+ "suggestedCourseTags":[string]}`;
+
+async function processWithAI(text: string, docType: DocType): Promise<{ payload: BreakdownPayload; goalDrafts: GoalDraft[] }> {
+  const isTri = docType === "triennial";
+  const extractSystem = isTri ? TRIENNIAL_EXTRACT_SYSTEM : IEP_EXTRACT_SYSTEM;
+  const renderSystem = isTri ? TRIENNIAL_RENDER_SYSTEM : IEP_RENDER_SYSTEM;
+  const extractSchema = isTri ? EXTRACT_SCHEMA_TRIENNIAL : EXTRACT_SCHEMA_IEP;
+
+  // Step 1 — extract structured, source-bound fields.
+  const extracted = await generateJson({
+    system: extractSystem,
+    user: `SOURCE DOCUMENT:\n${text}\n\n${extractSchema}`,
+    maxTokens: 4096,
+  });
+
+  // Step 2 — render the parent-facing breakdown from the extracted fields only.
+  const rendered = await generateJson({
+    system: renderSystem,
+    user: `EXTRACTED FIELDS (do not add anything not present here):\n${JSON.stringify(extracted)}\n\n${RENDER_SCHEMA}`,
+    maxTokens: 8192,
+  });
+
+  const payload = validatePayload(rendered);
+
+  // Build trackable goal drafts from the IEP extraction (triennials have none).
+  const goalDrafts: GoalDraft[] = !isTri && Array.isArray(extracted?.goals)
+    ? extracted.goals
+        .filter((g: any) => g && typeof g.verbatimText === "string" && g.verbatimText.trim())
+        .map((g: any) => ({
+          domain: str(g.domain) || "Goal",
+          verbatimText: str(g.verbatimText),
+          baseline: str(g.baseline),
+          target: str(g.target),
+          measure: str(g.measure),
+          confidence: g.confidence === "low" ? "low" : "high",
+        }))
+    : [];
+
+  return { payload, goalDrafts };
+}
+
+function str(v: unknown): string {
+  return typeof v === "string" ? v.trim() : "";
+}
+function bilingual(v: any): { en: string; es: string } {
+  const en = str(v?.en) || str(v);
+  const es = str(v?.es) || en; // fall back to English if Spanish is missing
+  return { en, es };
+}
+
+// Coerce/validate the model's render output into a well-formed BreakdownPayload.
+// Throws if essentials are missing so the caller can fall back to the deterministic render.
+function validatePayload(raw: any): BreakdownPayload {
+  if (!raw || typeof raw !== "object") throw new Error("render: not an object");
+  const summary = bilingual(raw.summary);
+  if (!summary.en) throw new Error("render: missing summary");
+  const itemsIn = Array.isArray(raw.items) ? raw.items : [];
+  const items: BreakdownItem[] = itemsIn
+    .filter((it: any) => it && (str(it.whatItSays) || str(it.category)))
+    .map((it: any, i: number) => ({
+      id: uid("bi", i + 1),
+      category: str(it.category) || "Item",
+      whatItSays: str(it.whatItSays),
+      whatItMeans: bilingual(it.whatItMeans),
+      whatYouCanDo: bilingual(it.whatYouCanDo),
+      confidence: it.confidence === "low" ? "low" : "high",
+    }));
+  if (!items.length) throw new Error("render: no items");
+
+  const keyDates = (Array.isArray(raw.keyDates) ? raw.keyDates : [])
+    .filter((d: any) => d && str(d.label) && str(d.date))
+    .map((d: any) => ({ label: str(d.label), date: str(d.date) }));
+  const questionsToAsk = (Array.isArray(raw.questionsToAsk) ? raw.questionsToAsk : [])
+    .map((q: any) => str(q))
+    .filter(Boolean);
+  const suggestedCourseTags = (Array.isArray(raw.suggestedCourseTags) ? raw.suggestedCourseTags : [])
+    .map((t: any) => str(t).toLowerCase().replace(/\s+/g, "_"))
+    .filter(Boolean);
+
+  return { summary, keyDates, questionsToAsk, items, disclaimer: DISCLAIMER, suggestedCourseTags };
 }
 
 function uid(prefix: string, n: number): string {
