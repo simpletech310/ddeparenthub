@@ -7,6 +7,9 @@ import { deleteDocumentAction, reanalyzeDocumentAction } from "@/lib/parent/acti
 import { BreakdownView } from "./BreakdownView";
 import { RecommendationList } from "@/components/RecommendationList";
 
+// Re-analyze runs the live two-step AI breakdown (~30s); allow time beyond the default timeout.
+export const maxDuration = 60;
+
 export default async function DocumentPage({
   params,
   searchParams,

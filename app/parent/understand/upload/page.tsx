@@ -5,6 +5,10 @@ import { getFamily } from "@/lib/data/families";
 import { uploadDocumentAction } from "@/lib/parent/actions";
 import type { DocType } from "@/lib/types";
 
+// Uploading runs the live two-step AI breakdown (extract -> render), which can take ~30s.
+// Give the server action room beyond the default serverless timeout so it doesn't fall back.
+export const maxDuration = 60;
+
 export default async function UploadPage({
   searchParams,
 }: {
