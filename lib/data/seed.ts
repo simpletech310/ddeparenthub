@@ -82,7 +82,9 @@ function seedPartners(): Partner[] {
       interestTags: ["animals", "horses", "outdoors"],
       needTags: ["social", "group_work", "outdoor_time"],
       contactName: "Jess Romero", phone: "(951) 555-0143", email: "hello@riversidestables.example",
-      website: "riversidestables.example", address: "8800 River Rd, Riverside, CA", status: "active",
+      website: "riversidestables.example", address: "8800 River Rd, Riverside, CA",
+      social: { instagram: "riversidestables", facebook: "riversidestables", youtube: "@riversidestables" },
+      status: "active",
     },
     {
       id: "partner_social", name: "Sunrise Social Skills Group", category: "Social skills",
@@ -95,7 +97,9 @@ function seedPartners(): Partner[] {
       interestTags: ["games", "art"],
       needTags: ["social", "group_work", "communication"],
       contactName: "Dana Kim", phone: "(951) 555-0177", email: "info@sunrisesocial.example",
-      website: "sunrisesocial.example", address: "210 Magnolia Ave, Riverside, CA", status: "active",
+      website: "sunrisesocial.example", address: "210 Magnolia Ave, Riverside, CA",
+      social: { instagram: "sunrisesocialgroup", facebook: "sunrisesocialgroup", tiktok: "@sunrisesocial" },
+      status: "active",
     },
     {
       id: "partner_speech", name: "Clear Speech Clinic", category: "Speech-language therapy",

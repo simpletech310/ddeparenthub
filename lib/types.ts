@@ -318,6 +318,16 @@ export interface GoalProgress {
 
 export type PartnerStatus = "active" | "archived";
 
+// Social-network handles/links for a partner. All optional — each is a slot.
+export interface PartnerSocial {
+  instagram?: string;
+  facebook?: string;
+  youtube?: string;
+  tiktok?: string;
+  linkedin?: string;
+  x?: string; // X / Twitter
+}
+
 export interface Partner {
   id: string;
   name: string;
@@ -337,6 +347,7 @@ export interface Partner {
   email: string;
   website: string;
   address: string;
+  social?: PartnerSocial; // social-network slots
   status: PartnerStatus;
 }
 

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireRole } from "@/lib/auth/session";
 import { getPartner } from "@/lib/data/partners";
+import { SocialLinks } from "@/components/SocialLinks";
 
 export default async function PartnerDetail({ params }: { params: { partnerId: string } }) {
   await requireRole("parent");
@@ -60,6 +61,11 @@ export default async function PartnerDetail({ params }: { params: { partnerId: s
         {p.email && <p className="text-brand-700">✉️ {p.email}</p>}
         {p.website && <p className="text-brand-700">🌐 {p.website}</p>}
         {p.address && <p className="text-ink-500">📍 {p.address}</p>}
+        {p.social && (
+          <div className="pt-2">
+            <SocialLinks social={p.social} />
+          </div>
+        )}
       </section>
 
       <p className="text-xs text-ink-400">

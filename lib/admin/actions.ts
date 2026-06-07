@@ -1,8 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { requireRole } from "@/lib/auth/session";
 import { createUser, getUser, setUserFamily, setUserStatus } from "@/lib/data/repos";
+import { id } from "@/lib/data/store";
+import { createSignedUploadUrl } from "@/lib/supabase/storage";
 import {
   assignStaff,
   createFamily,
@@ -10,9 +13,11 @@ import {
 } from "@/lib/data/families";
 import {
   createPartner,
+  getPartner,
   setPartnerStatus,
   updatePartner,
 } from "@/lib/data/partners";
+import type { PartnerSocial } from "@/lib/types";
 
 function tags(raw: FormDataEntryValue | null): string[] {
   return String(raw ?? "")
@@ -44,12 +49,24 @@ export async function toggleUserStatusAction(formData: FormData): Promise<void> 
 }
 
 // ---- Partner directory ----
+// Note: imageUrl is intentionally NOT read here — the photo is set via the dedicated
+// upload action so saving the rest of the form never wipes an uploaded image.
+function socialFields(formData: FormData): PartnerSocial {
+  const get = (k: string) => String(formData.get(k) ?? "").trim() || undefined;
+  return {
+    instagram: get("social_instagram"),
+    facebook: get("social_facebook"),
+    youtube: get("social_youtube"),
+    tiktok: get("social_tiktok"),
+    linkedin: get("social_linkedin"),
+    x: get("social_x"),
+  };
+}
 function partnerFields(formData: FormData) {
   return {
     name: String(formData.get("name") ?? "").trim(),
     category: String(formData.get("category") ?? "").trim(),
     tagline: String(formData.get("tagline") ?? "").trim(),
-    imageUrl: String(formData.get("imageUrl") ?? "").trim() || undefined,
     description: String(formData.get("description") ?? "").trim(),
     howTheyHelp: String(formData.get("howTheyHelp") ?? "").trim(),
     services: lines(formData.get("services")),
@@ -61,13 +78,20 @@ function partnerFields(formData: FormData) {
     email: String(formData.get("email") ?? "").trim(),
     website: String(formData.get("website") ?? "").trim(),
     address: String(formData.get("address") ?? "").trim(),
+    social: socialFields(formData),
   };
 }
 export async function createPartnerAction(formData: FormData): Promise<void> {
   await requireRole("admin");
   const f = partnerFields(formData);
-  if (f.name) await createPartner(f);
+  if (!f.name) {
+    revalidatePath("/admin/partners");
+    return;
+  }
+  const partner = await createPartner(f);
   revalidatePath("/admin/partners");
+  // Land on the edit page so the admin can add a photo and finish details.
+  redirect(`/admin/partners/${partner.id}`);
 }
 export async function updatePartnerAction(formData: FormData): Promise<void> {
   await requireRole("admin");
@@ -75,6 +99,8 @@ export async function updatePartnerAction(formData: FormData): Promise<void> {
   await updatePartner(partnerId, partnerFields(formData));
   revalidatePath("/admin/partners");
   revalidatePath(`/admin/partners/${partnerId}`);
+  revalidatePath("/parent/resources");
+  redirect("/admin/partners");
 }
 export async function archivePartnerAction(formData: FormData): Promise<void> {
   await requireRole("admin");
@@ -82,6 +108,39 @@ export async function archivePartnerAction(formData: FormData): Promise<void> {
   const target = String(formData.get("status") ?? "archived") as "active" | "archived";
   await setPartnerStatus(partnerId, target);
   revalidatePath("/admin/partners");
+}
+
+// ---- Partner image upload (signed direct-to-storage; same pattern as course media) ----
+const ALLOWED_PARTNER_IMG: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/gif": "gif",
+};
+export async function createPartnerUploadUrlAction(input: {
+  partnerId: string;
+  contentType: string;
+}): Promise<{ ok: true; uploadUrl: string; path: string } | { ok: false; error: string }> {
+  await requireRole("admin");
+  const partner = await getPartner(input.partnerId);
+  if (!partner) return { ok: false, error: "Partner not found." };
+  const ext = ALLOWED_PARTNER_IMG[input.contentType];
+  if (!ext) return { ok: false, error: "Use a JPG, PNG, WebP or GIF image." };
+  const path = `media/partners/${input.partnerId}/${id("p")}.${ext}`;
+  try {
+    const uploadUrl = await createSignedUploadUrl(path);
+    return { ok: true, uploadUrl, path };
+  } catch {
+    return { ok: false, error: "Couldn't start the upload. Please try again." };
+  }
+}
+export async function setPartnerImageAction(input: { partnerId: string; path: string }): Promise<void> {
+  await requireRole("admin");
+  if (!input.path.startsWith(`media/partners/${input.partnerId}/`)) return;
+  await updatePartner(input.partnerId, { imageUrl: `/api/media/${input.path}` });
+  revalidatePath(`/admin/partners/${input.partnerId}`);
+  revalidatePath("/admin/partners");
+  revalidatePath("/parent/resources");
 }
 
 // ---- Family management ----

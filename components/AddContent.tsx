@@ -7,6 +7,7 @@ import {
   attachCourseMediaAction,
   createCourseUploadUrlAction,
 } from "@/lib/staff/actions";
+import { putWithProgress } from "@/lib/uploadClient";
 
 type Tab = "text" | "video" | "image" | "link";
 const MAX_BYTES = 100 * 1024 * 1024; // 100 MB — direct-to-storage, no serverless body limit
@@ -17,21 +18,6 @@ const TABS: { key: Tab; label: string; icon: string }[] = [
   { key: "image", label: "Upload image", icon: "🖼️" },
   { key: "link", label: "Video link", icon: "🔗" },
 ];
-
-function putWithProgress(url: string, file: File, onPct: (n: number) => void): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open("PUT", url);
-    xhr.setRequestHeader("Content-Type", file.type);
-    xhr.upload.onprogress = (e) => {
-      if (e.lengthComputable) onPct(Math.round((e.loaded / e.total) * 100));
-    };
-    xhr.onload = () =>
-      xhr.status >= 200 && xhr.status < 300 ? resolve() : reject(new Error(`Upload failed (${xhr.status})`));
-    xhr.onerror = () => reject(new Error("Network error during upload."));
-    xhr.send(file);
-  });
-}
 
 export function AddContent({ courseId, lessonId }: { courseId: string; lessonId: string }) {
   const router = useRouter();
