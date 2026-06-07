@@ -24,6 +24,17 @@ function Block({ block }: { block: ContentBlock }) {
         />
       );
     case "video":
+      // Uploaded files play in a native <video>; pasted embed links use an <iframe>.
+      if (p.uploaded) {
+        return (
+          <figure className="overflow-hidden rounded-xl bg-black">
+            <video src={String(p.url ?? "")} controls playsInline className="aspect-video w-full bg-black" />
+            {p.caption ? (
+              <figcaption className="bg-black px-3 py-1.5 text-xs text-white/70">{String(p.caption)}</figcaption>
+            ) : null}
+          </figure>
+        );
+      }
       return (
         <div className="overflow-hidden rounded-xl bg-black">
           <div className="aspect-video">

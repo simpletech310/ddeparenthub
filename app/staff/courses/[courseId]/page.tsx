@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { requireRole } from "@/lib/auth/session";
 import { courseReadiness, getCourseSnapshot } from "@/lib/data/repos";
 import {
-  addContentBlockAction,
   addLessonAction,
   deleteContentBlockAction,
   deleteLessonAction,
@@ -19,6 +18,8 @@ import {
 } from "@/lib/staff/actions";
 import { LaunchEventForm } from "@/components/LaunchEventForm";
 import { AddQuestionForm } from "@/components/AddQuestionForm";
+import { AddContent } from "@/components/AddContent";
+import { LessonContent } from "@/components/LessonContent";
 import type { Assessment, Question } from "@/lib/types";
 
 function htmlToText(html: string): string {
@@ -144,16 +145,23 @@ export default async function CourseEditor({
                   {/* Content blocks */}
                   <div className="space-y-2">
                     <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">Content</p>
+                    {blocks.length === 0 && (
+                      <p className="rounded-lg bg-brand-50/60 px-3 py-2 text-xs text-ink-500">
+                        No content yet — add a paragraph or a video below.
+                      </p>
+                    )}
                     {blocks.map((b, bi) => (
-                      <div key={b.id} className="rounded-lg border border-brand-100 p-2">
-                        <div className="mb-1 flex items-center justify-between">
-                          <span className="text-xs font-medium text-ink-600">{b.type.replace(/_/g, " ")}</span>
+                      <div key={b.id} className="rounded-xl border border-brand-100 bg-white p-2.5">
+                        <div className="mb-1.5 flex items-center justify-between">
+                          <span className="inline-flex items-center gap-1 text-xs font-medium text-ink-600">
+                            {blockIcon(b.type, b.payload)} {blockLabel(b.type, b.payload)}
+                          </span>
                           <div className="flex items-center gap-1">
                             <MoveBtns courseId={cid} action={moveContentBlockAction} idField="blockId" idValue={b.id} extra={{ lessonId: l.id }} disablePrev={bi === 0} disableNext={bi === blocks.length - 1} />
                             <form action={deleteContentBlockAction}>
                               <input type="hidden" name="courseId" value={cid} />
                               <input type="hidden" name="blockId" value={b.id} />
-                              <button className="rounded px-2 py-0.5 text-xs text-accent-600" type="submit">✕</button>
+                              <button className="rounded px-2 py-0.5 text-xs text-accent-600" type="submit" aria-label="Delete content block">✕</button>
                             </form>
                           </div>
                         </div>
@@ -165,39 +173,13 @@ export default async function CourseEditor({
                             <button className="btn-ghost mt-1 py-1 text-xs" type="submit">Save text</button>
                           </form>
                         ) : (
-                          <p className="break-all text-xs text-ink-500">{String((b.payload as any).url ?? (b.payload as any).images?.[0]?.url ?? "")}</p>
+                          <LessonContent blocks={[b]} />
                         )}
                       </div>
                     ))}
 
                     {/* Add content */}
-                    <div className="flex flex-wrap gap-2">
-                      <details>
-                        <summary className="cursor-pointer text-xs font-medium text-ink-600">+ Text</summary>
-                        <form action={addContentBlockAction} className="mt-1 space-y-1">
-                          <input type="hidden" name="courseId" value={cid} />
-                          <input type="hidden" name="lessonId" value={l.id} />
-                          <input type="hidden" name="type" value="rich_text" />
-                          <textarea name="text" className="input min-h-[60px] text-sm" placeholder="Write a paragraph…" />
-                          <button className="btn-ghost py-1 text-xs" type="submit">Add text</button>
-                        </form>
-                      </details>
-                      <details>
-                        <summary className="cursor-pointer text-xs font-medium text-ink-600">+ Media</summary>
-                        <form action={addContentBlockAction} className="mt-1 space-y-1">
-                          <input type="hidden" name="courseId" value={cid} />
-                          <input type="hidden" name="lessonId" value={l.id} />
-                          <select name="type" className="input py-1 text-xs">
-                            <option value="image">Image</option>
-                            <option value="video">Video (embed URL)</option>
-                            <option value="slideshow">Slideshow (1 image)</option>
-                          </select>
-                          <input name="url" className="input py-1 text-xs" placeholder="Media URL" />
-                          <input name="alt" className="input py-1 text-xs" placeholder="Alt / caption" />
-                          <button className="btn-ghost py-1 text-xs" type="submit">Add media</button>
-                        </form>
-                      </details>
-                    </div>
+                    <AddContent courseId={cid} lessonId={l.id} />
                   </div>
 
                   {/* Lesson check */}
@@ -242,6 +224,21 @@ export default async function CourseEditor({
       )}
     </div>
   );
+}
+
+function blockIcon(type: string, payload: Record<string, unknown>): string {
+  if (type === "video") return (payload as any).uploaded ? "🎬" : "🔗";
+  if (type === "image") return "🖼️";
+  if (type === "slideshow") return "🖼️";
+  return "✍️";
+}
+
+function blockLabel(type: string, payload: Record<string, unknown>): string {
+  if (type === "rich_text") return "Text";
+  if (type === "video") return (payload as any).uploaded ? "Uploaded video" : "Video link";
+  if (type === "image") return "Image";
+  if (type === "slideshow") return "Slideshow";
+  return type.replace(/_/g, " ");
 }
 
 function Check({ ok, label }: { ok: boolean; label: string }) {

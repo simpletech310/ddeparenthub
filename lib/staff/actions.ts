@@ -28,10 +28,68 @@ import {
   updateLesson,
 } from "@/lib/data/repos";
 import { generateCourse } from "@/lib/ai/courseBuilder";
+import { createSignedUploadUrl } from "@/lib/supabase/storage";
+import { id } from "@/lib/data/store";
 import type { ContentBlockType, Question, QuestionType } from "@/lib/types";
 
 async function ownsCourse(userId: string, courseId: string): Promise<boolean> {
   return (await getCourse(courseId))?.ownerStaffId === userId;
+}
+
+// Allowed direct-upload media types → file extension.
+const ALLOWED_MEDIA: Record<string, string> = {
+  "video/mp4": "mp4",
+  "video/webm": "webm",
+  "video/quicktime": "mov",
+  "video/ogg": "ogv",
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/gif": "gif",
+  "image/webp": "webp",
+};
+
+// Step 1 of a direct upload: mint a one-time signed URL the browser PUTs the file to.
+// The path is constructed server-side (never trusted from the client) and scoped to
+// this course, so a signed URL can't be used to overwrite db.json or another course.
+export async function createCourseUploadUrlAction(input: {
+  courseId: string;
+  lessonId: string;
+  contentType: string;
+}): Promise<{ ok: true; uploadUrl: string; path: string } | { ok: false; error: string }> {
+  const user = await requireRole("staff");
+  if (!(await ownsCourse(user.id, input.courseId))) return { ok: false, error: "You don't own this course." };
+  const ext = ALLOWED_MEDIA[input.contentType];
+  if (!ext) return { ok: false, error: "Unsupported file type. Use MP4/WebM/MOV video or JPG/PNG/WebP image." };
+  const safeLesson = input.lessonId.replace(/[^a-zA-Z0-9_-]/g, "");
+  const path = `media/courses/${input.courseId}/${safeLesson}/${id("m")}.${ext}`;
+  try {
+    const uploadUrl = await createSignedUploadUrl(path);
+    return { ok: true, uploadUrl, path };
+  } catch {
+    return { ok: false, error: "Couldn't start the upload. Please try again." };
+  }
+}
+
+// Step 2 of a direct upload: once the file is in storage, attach it as a content block.
+export async function attachCourseMediaAction(input: {
+  courseId: string;
+  lessonId: string;
+  path: string;
+  kind: "video" | "image";
+  caption?: string;
+}): Promise<void> {
+  const user = await requireRole("staff");
+  if (!(await ownsCourse(user.id, input.courseId))) return;
+  // Only attach media that lives under this course's own media folder.
+  if (!input.path.startsWith(`media/courses/${input.courseId}/`)) return;
+  const url = `/api/media/${input.path}`;
+  const caption = (input.caption ?? "").trim();
+  if (input.kind === "video") {
+    await addContentBlock(input.lessonId, "video", { url, caption, uploaded: true });
+  } else {
+    await addContentBlock(input.lessonId, "image", { url, alt: caption });
+  }
+  revalidatePath(`/staff/courses/${input.courseId}`);
 }
 
 function textToHtml(text: string): string {

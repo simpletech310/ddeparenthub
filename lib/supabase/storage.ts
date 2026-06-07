@@ -50,6 +50,36 @@ export async function uploadMedia(path: string, bytes: ArrayBuffer, contentType:
   return path;
 }
 
+// Create a one-time signed upload URL for a media object. The browser uploads the file
+// directly to Supabase Storage with this URL, bypassing the serverless request-body limit
+// (Vercel caps function bodies at ~4.5MB, which is far too small for video). Returns the
+// absolute URL to PUT the file to.
+export async function createSignedUploadUrl(path: string): Promise<string> {
+  const res = await fetch(`${URL}/storage/v1/object/upload/sign/${STATE_BUCKET}/${path}`, {
+    method: "POST",
+    headers: headers({ "Content-Type": "application/json" }),
+    body: "{}",
+  });
+  if (!res.ok) throw new Error(`sign upload failed: ${res.status} ${await res.text()}`);
+  const json = (await res.json()) as { url?: string };
+  if (!json.url) throw new Error("sign upload: missing url in response");
+  return `${URL}/storage/v1${json.url}`;
+}
+
+// Stream a media object back from the private bucket (used by the /api/media proxy).
+// Forwards an optional Range header so <video> seeking works. Returns null if missing.
+export async function fetchMedia(path: string, range?: string | null): Promise<Response | null> {
+  const extra: Record<string, string> = {};
+  if (range) extra["Range"] = range;
+  const res = await fetch(`${URL}/storage/v1/object/${STATE_BUCKET}/${path}`, {
+    headers: headers(extra),
+    cache: "no-store",
+  });
+  if (res.status === 404 || res.status === 400) return null;
+  if (!res.ok && res.status !== 206) throw new Error(`media fetch failed: ${res.status}`);
+  return res;
+}
+
 // Ensure the private state bucket exists (no-op if present). Safe to call repeatedly.
 export async function ensureBucket(): Promise<void> {
   await fetch(`${URL}/storage/v1/bucket`, {
