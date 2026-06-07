@@ -7,7 +7,7 @@ export default async function NewCoursePage() {
     <div className="mx-auto max-w-xl space-y-5">
       <div>
         <h1 className="text-xl font-bold text-brand-900">Create a course</h1>
-        <p className="text-sm text-brand-600">
+        <p className="text-sm text-ink-600">
           Generate a complete, ready-to-teach draft with AI, or start from a blank course and build it
           yourself. Either way you can edit everything before publishing.
         </p>
@@ -17,7 +17,7 @@ export default async function NewCoursePage() {
       <form action={createBlankCourseAction} className="card flex items-center justify-between gap-3">
         <div>
           <h2 className="font-semibold text-brand-900">Start from scratch</h2>
-          <p className="text-sm text-brand-600">A blank course with a starter lesson, pre-test, and post-test.</p>
+          <p className="text-sm text-ink-600">A blank course with a starter lesson, pre-test, and post-test.</p>
         </div>
         <div className="flex shrink-0 gap-2">
           <input name="title" className="input w-36" placeholder="Course title" />
@@ -25,7 +25,7 @@ export default async function NewCoursePage() {
         </div>
       </form>
 
-      <div className="text-center text-xs font-medium uppercase tracking-wide text-brand-400">or generate with AI</div>
+      <div className="text-center text-xs font-medium uppercase tracking-wide text-ink-400">or generate with AI</div>
 
       <form action={generateCourseAction} className="card space-y-4">
         <div>
@@ -81,7 +81,7 @@ export default async function NewCoursePage() {
         <button className="btn-primary w-full" type="submit">
           ✨ Generate editable draft
         </button>
-        <p className="text-center text-xs text-brand-500">
+        <p className="text-center text-xs text-ink-500">
           Prototype note: generation is stubbed and returns a structured draft instantly.
         </p>
       </form>

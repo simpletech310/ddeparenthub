@@ -14,11 +14,11 @@ export default async function ParentLayout({ children }: { children: React.React
         <div className="mx-auto max-w-md px-4 py-16 text-center">
           <div className="card">
             <h1 className="text-lg font-bold text-brand-900">Welcome to DDE Parent Hub</h1>
-            <p className="mt-2 text-sm text-brand-600">
+            <p className="mt-2 text-sm text-ink-600">
               Your account isn't linked to a family yet. A DDE administrator will connect you to your
               family so you can see your child's plan, classes, and progress.
             </p>
-            <p className="mt-3 text-xs text-brand-500">
+            <p className="mt-3 text-xs text-ink-500">
               Already expecting access? Please reach out to your DDE contact.
             </p>
           </div>
@@ -28,9 +28,9 @@ export default async function ParentLayout({ children }: { children: React.React
   }
 
   return (
-    <div className="min-h-screen pb-20">
+    <div className="min-h-screen pb-28">
       <AppHeader name={user.name} roleLabel="Parent" homeHref="/parent" />
-      <div className="mx-auto max-w-3xl px-4 py-5">{children}</div>
+      <div className="mx-auto max-w-3xl animate-fade-up px-4 py-6">{children}</div>
       <BottomNav />
     </div>
   );

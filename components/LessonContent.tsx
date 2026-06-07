@@ -61,7 +61,7 @@ function Slideshow({ images }: { images: { url: string; alt?: string }[] }) {
     <div className="rounded-xl border border-brand-100 p-2">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={images[i].url} alt={images[i].alt ?? ""} className="mx-auto rounded-lg" />
-      <div className="mt-2 flex items-center justify-between text-xs text-brand-600">
+      <div className="mt-2 flex items-center justify-between text-xs text-ink-600">
         <button onClick={() => setI((x) => Math.max(0, x - 1))} disabled={i === 0} className="btn-ghost">
           ‹ Prev
         </button>
@@ -110,7 +110,7 @@ function EmbeddedQuestion({
                   ? "border-accent-300 bg-accent-50 text-accent-700"
                   : correct
                   ? "border-brand-400 bg-brand-50 text-brand-700"
-                  : "border-brand-100 bg-white text-brand-400"
+                  : "border-brand-100 bg-white text-ink-400"
               }`}
             >
               {o}
@@ -119,7 +119,7 @@ function EmbeddedQuestion({
         })}
       </div>
       {picked !== null && (
-        <p className="mt-2 text-xs font-medium text-brand-600">
+        <p className="mt-2 text-xs font-medium text-ink-600">
           {picked === answerIndex ? "Correct! 🎉 (not graded)" : "Not quite — review above. (not graded)"}
         </p>
       )}

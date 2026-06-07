@@ -20,7 +20,7 @@ export default async function StaffFamilies() {
     <div className="space-y-5">
       <div>
         <h1 className="text-xl font-bold text-brand-900">My families</h1>
-        <p className="text-sm text-brand-600">
+        <p className="text-sm text-ink-600">
           Families you're assigned to. Open a family to see their children, progress, and documents.
           Records are shared across the whole assigned team.
         </p>
@@ -34,7 +34,7 @@ export default async function StaffFamilies() {
               <li key={fid}>
                 <Link href={`/staff/families/${fid}`} className="card block hover:border-brand-300">
                   <p className="font-semibold text-brand-900">{fam.name}</p>
-                  <p className="text-xs text-brand-500">
+                  <p className="text-xs text-ink-500">
                     {children.map((c) => c.displayName).join(", ") || "No children"} ·{" "}
                     {parents.map((p) => p.name.split(" ")[0]).join(", ")}
                   </p>
@@ -44,7 +44,7 @@ export default async function StaffFamilies() {
           })}
         </ul>
       ) : (
-        <p className="card text-sm text-brand-500">
+        <p className="card text-sm text-ink-500">
           You aren't assigned to any families yet. An administrator assigns families to staff.
         </p>
       )}

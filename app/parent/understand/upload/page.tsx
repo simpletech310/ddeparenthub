@@ -19,7 +19,7 @@ export default async function UploadPage({
   if (!children.length) {
     return (
       <div className="space-y-4">
-        <Link href="/parent/understand" className="text-sm text-brand-600">
+        <Link href="/parent/understand" className="text-sm text-ink-600">
           ← Understand
         </Link>
         <div className="card">
@@ -36,14 +36,14 @@ export default async function UploadPage({
 
   return (
     <div className="space-y-4">
-      <Link href="/parent/understand" className="text-sm text-brand-600">
+      <Link href="/parent/understand" className="text-sm text-ink-600">
         ← Understand
       </Link>
       <div>
         <h1 className="text-xl font-bold text-brand-900">
           Upload {docType === "iep" ? "an IEP" : "a triennial evaluation"}
         </h1>
-        <p className="text-sm text-brand-600">
+        <p className="text-sm text-ink-600">
           We'll create a plain-language breakdown you can revisit anytime.
         </p>
       </div>
@@ -69,7 +69,7 @@ export default async function UploadPage({
             Document (PDF or photo)
           </label>
           <input id="file" name="fileName" type="text" className="input" placeholder="e.g. Leo-IEP-2026.pdf" />
-          <p className="mt-1 text-xs text-brand-500">
+          <p className="mt-1 text-xs text-ink-500">
             Prototype note: file parsing/OCR is stubbed — type a file name to simulate the upload.
           </p>
         </div>

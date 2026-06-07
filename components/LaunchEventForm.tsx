@@ -15,7 +15,7 @@ export function LaunchEventForm({
   return (
     <form action={launchClassAction} className="card space-y-3">
       <h2 className="font-semibold text-brand-900">Launch an event from this course</h2>
-      <p className="text-xs text-brand-500">
+      <p className="text-xs text-ink-500">
         The curriculum is snapshotted at launch, so later edits won't change a running event.
       </p>
 
@@ -60,7 +60,7 @@ export function LaunchEventForm({
               key={m}
               type="button"
               onClick={() => setMode(m)}
-              className={`px-3 py-1.5 font-medium ${mode === m ? "bg-brand-600 text-white" : "bg-white text-brand-600"}`}
+              className={`px-3 py-1.5 font-medium ${mode === m ? "bg-brand-600 text-white" : "bg-white text-ink-600"}`}
             >
               {m === "telehealth" ? "Telehealth" : "In person"}
             </button>
@@ -73,7 +73,7 @@ export function LaunchEventForm({
         <div>
           <label className="label" htmlFor="meetingLink">Meeting link (paste Zoom/Meet URL)</label>
           <input id="meetingLink" name="meetingLink" className="input" placeholder="https://zoom.us/j/…" />
-          <p className="mt-1 text-xs text-brand-500">Shown to RSVP'd parents only.</p>
+          <p className="mt-1 text-xs text-ink-500">Shown to RSVP'd parents only.</p>
         </div>
       ) : (
         <div>

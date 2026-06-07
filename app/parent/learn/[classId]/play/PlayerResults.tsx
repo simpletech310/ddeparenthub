@@ -30,16 +30,16 @@ export function PlayerResults({
 
       <div className="grid grid-cols-2 gap-3">
         <div className="card text-center">
-          <p className="text-xs uppercase tracking-wide text-brand-500">Pre-test</p>
+          <p className="text-xs uppercase tracking-wide text-ink-500">Pre-test</p>
           <p className="text-2xl font-bold text-brand-900">{pct(preAttempt)}%</p>
-          <p className="text-xs text-brand-500">
+          <p className="text-xs text-ink-500">
             {preAttempt.score}/{preAttempt.maxScore}
           </p>
         </div>
         <div className="card text-center">
-          <p className="text-xs uppercase tracking-wide text-brand-500">Post-test</p>
+          <p className="text-xs uppercase tracking-wide text-ink-500">Post-test</p>
           <p className="text-2xl font-bold text-brand-900">{pct(postAttempt)}%</p>
-          <p className="text-xs text-brand-500">
+          <p className="text-xs text-ink-500">
             {postAttempt.score}/{postAttempt.maxScore}
           </p>
         </div>

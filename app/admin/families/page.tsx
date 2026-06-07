@@ -21,7 +21,7 @@ export default async function AdminFamilies() {
     <div className="space-y-5">
       <div>
         <h1 className="text-xl font-bold text-brand-900">Families</h1>
-        <p className="text-sm text-brand-600">
+        <p className="text-sm text-ink-600">
           Create families, link parents, and assign staff. Assigned staff see the family file; you see all.
         </p>
       </div>
@@ -31,7 +31,7 @@ export default async function AdminFamilies() {
           <li key={f.id}>
             <Link href={`/admin/families/${f.id}`} className="card block hover:border-brand-300">
               <p className="font-semibold text-brand-900">{f.name}</p>
-              <p className="text-xs text-brand-500">
+              <p className="text-xs text-ink-500">
                 {children.map((c) => c.displayName).join(", ") || "No children"} ·{" "}
                 Parents: {parents.map((p) => p.name.split(" ")[0]).join(", ") || "none"} ·{" "}
                 Staff: {staff.map((s) => s.name.split(" ")[0]).join(", ") || "none"}
@@ -73,7 +73,7 @@ export default async function AdminFamilies() {
             <div><label className="label">Email</label><input name="email" type="email" className="input" required /></div>
           </div>
           <div><label className="label">Title (staff)</label><input name="title" className="input" placeholder="BCBA / Behavior Technician" /></div>
-          <p className="text-xs text-brand-500">New users get the demo password <span className="font-mono">demo</span>.</p>
+          <p className="text-xs text-ink-500">New users get the demo password <span className="font-mono">demo</span>.</p>
           <button className="btn-primary w-full" type="submit">Create user</button>
         </form>
       </details>

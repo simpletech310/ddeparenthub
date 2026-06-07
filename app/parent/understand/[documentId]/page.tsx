@@ -27,9 +27,9 @@ export default async function DocumentPage({
     <div className="space-y-4">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <Link href="/parent/understand" className="text-sm text-brand-600">← Understand</Link>
+          <Link href="/parent/understand" className="text-sm text-ink-600">← Understand</Link>
           <h1 className="mt-1 text-xl font-bold text-brand-900">{doc.fileName}</h1>
-          <p className="text-xs text-brand-500">
+          <p className="text-xs text-ink-500">
             {child?.displayName} ·{" "}
             <span className="uppercase">{doc.docType === "iep" ? "IEP" : "Triennial"}</span>
           </p>
@@ -62,10 +62,10 @@ export default async function DocumentPage({
 
       {recs.length > 0 && (
         <section>
-          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-brand-600">
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-600">
             Recommended supports{child ? ` for ${child.displayName}` : ""}
           </h2>
-          <p className="mb-2 text-xs text-brand-500">
+          <p className="mb-2 text-xs text-ink-500">
             Grounded in this IEP's goals and {child?.displayName}'s profile — real DDE classes and partners.
           </p>
           <RecommendationList recs={recs} />

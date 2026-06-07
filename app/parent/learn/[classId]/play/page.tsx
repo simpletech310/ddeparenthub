@@ -48,7 +48,7 @@ export default async function PlayerPage({ params }: { params: { classId: string
   return (
     <div className="space-y-5">
       <div>
-        <Link href="/parent/learn" className="text-sm text-brand-600">
+        <Link href="/parent/learn" className="text-sm text-ink-600">
           ← Classes
         </Link>
         <h1 className="mt-1 text-lg font-bold text-brand-900">{cls.title}</h1>
@@ -88,7 +88,7 @@ export default async function PlayerPage({ params }: { params: { classId: string
             <LessonContent blocks={blocks} />
             {check && checkQs.length > 0 && (
               <div className="mt-5">
-                <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-brand-600">
+                <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-600">
                   Lesson check
                 </h3>
                 <AssessmentForm
@@ -139,7 +139,7 @@ function ProgressBar({ completed, total }: { completed: number; total: number })
       <div className="h-2 w-full overflow-hidden rounded-full bg-brand-100">
         <div className="h-full bg-brand-500 transition-all" style={{ width: `${pct}%` }} />
       </div>
-      <p className="mt-1 text-xs text-brand-500">
+      <p className="mt-1 text-xs text-ink-500">
         {completed} of {total} steps complete
       </p>
     </div>
@@ -162,7 +162,7 @@ function Stage({
       <div>
         <span className="pill bg-accent-100 text-accent-700">{badge}</span>
         <h2 className="mt-2 text-lg font-bold text-brand-900">{title}</h2>
-        {subtitle && <p className="text-sm text-brand-600">{subtitle}</p>}
+        {subtitle && <p className="text-sm text-ink-600">{subtitle}</p>}
       </div>
       {children}
     </div>

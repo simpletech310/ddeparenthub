@@ -15,7 +15,7 @@ export default async function StaffLayout({ children }: { children: React.ReactN
           { href: "/staff/templates", label: "Template library" },
         ]}
       />
-      <div className="mx-auto max-w-4xl px-4 py-5">{children}</div>
+      <div className="mx-auto max-w-4xl animate-fade-up px-4 py-6">{children}</div>
     </div>
   );
 }

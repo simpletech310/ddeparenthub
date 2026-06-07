@@ -15,7 +15,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           { href: "/admin/reporting", label: "Reporting" },
         ]}
       />
-      <div className="mx-auto max-w-4xl px-4 py-5">{children}</div>
+      <div className="mx-auto max-w-4xl animate-fade-up px-4 py-6">{children}</div>
     </div>
   );
 }

@@ -32,7 +32,7 @@ export default async function StaffDashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-brand-900">Welcome, {user.name.split(" ")[0]}</h1>
-          <p className="text-sm text-brand-600">Support your families and run parent classes.</p>
+          <p className="text-sm text-ink-600">Support your families and run parent classes.</p>
         </div>
         <Link href="/staff/courses/new" className="btn-primary">
           + New course
@@ -40,7 +40,7 @@ export default async function StaffDashboard() {
       </div>
 
       <section>
-        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-brand-600">
+        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-600">
           My families
         </h2>
         {familyCards.length ? (
@@ -51,7 +51,7 @@ export default async function StaffDashboard() {
                 <li key={fid}>
                   <Link href={`/staff/families/${fid}`} className="card block hover:border-brand-300">
                     <p className="font-semibold text-brand-900">{fam.name}</p>
-                    <p className="text-xs text-brand-500">
+                    <p className="text-xs text-ink-500">
                       {children.map((c) => c.displayName).join(", ") || "No children"}
                     </p>
                     <div className="mt-2 flex flex-wrap gap-1">
@@ -61,7 +61,7 @@ export default async function StaffDashboard() {
                           {ins.goalsNeedingAttention} need attention
                         </span>
                       )}
-                      <span className="pill bg-brand-50 text-brand-600">{ins.observations} logs</span>
+                      <span className="pill bg-brand-50 text-ink-600">{ins.observations} logs</span>
                     </div>
                   </Link>
                 </li>
@@ -69,14 +69,14 @@ export default async function StaffDashboard() {
             })}
           </ul>
         ) : (
-          <p className="card text-sm text-brand-500">
+          <p className="card text-sm text-ink-500">
             No families assigned yet. An administrator assigns families to you.
           </p>
         )}
       </section>
 
       <section>
-        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-brand-600">
+        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-600">
           My courses
         </h2>
         <ul className="grid gap-2 sm:grid-cols-2">
@@ -95,7 +95,7 @@ export default async function StaffDashboard() {
                     {c.status}
                   </span>
                 </div>
-                <p className="mt-1 text-sm text-brand-600 line-clamp-2">{c.description}</p>
+                <p className="mt-1 text-sm text-ink-600 line-clamp-2">{c.description}</p>
                 {c.isTemplate && (
                   <span className="mt-2 inline-block pill bg-brand-100 text-brand-700">Template</span>
                 )}
@@ -103,7 +103,7 @@ export default async function StaffDashboard() {
             </li>
           ))}
           {!courses.length && (
-            <li className="card text-sm text-brand-500">
+            <li className="card text-sm text-ink-500">
               No courses yet. Create one or generate with AI.
             </li>
           )}
@@ -111,7 +111,7 @@ export default async function StaffDashboard() {
       </section>
 
       <section>
-        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-brand-600">
+        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-600">
           My classes
         </h2>
         <ul className="space-y-2">
@@ -124,7 +124,7 @@ export default async function StaffDashboard() {
                 >
                   <div>
                     <p className="font-semibold text-brand-900">{cls.title}</p>
-                    <p className="text-xs text-brand-500">{cls.schedule}</p>
+                    <p className="text-xs text-ink-500">{cls.schedule}</p>
                   </div>
                   <span className="pill bg-brand-50 text-brand-700">
                     {count}/{cls.capacity} enrolled
@@ -134,7 +134,7 @@ export default async function StaffDashboard() {
             );
           })}
           {!classes.length && (
-            <li className="card text-sm text-brand-500">
+            <li className="card text-sm text-ink-500">
               No classes yet. Open a course and launch one.
             </li>
           )}

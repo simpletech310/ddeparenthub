@@ -12,7 +12,7 @@ export default async function AdminReporting() {
     <div className="space-y-5">
       <div>
         <h1 className="text-xl font-bold text-brand-900">Aggregate reporting</h1>
-        <p className="text-sm text-brand-600">
+        <p className="text-sm text-ink-600">
           Org-wide learning outcomes. This report intentionally contains no document, breakdown, or
           goal data (§7 / §13).
         </p>
@@ -28,7 +28,7 @@ export default async function AdminReporting() {
         <h2 className="mb-2 font-semibold text-brand-900">By course</h2>
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-left text-xs uppercase tracking-wide text-brand-500">
+            <tr className="text-left text-xs uppercase tracking-wide text-ink-500">
               <th className="py-1.5">Course</th>
               <th className="py-1.5">Classes</th>
               <th className="py-1.5">Enrolled</th>
@@ -40,9 +40,9 @@ export default async function AdminReporting() {
             {aggregates.map((a) => (
               <tr key={a.courseId} className="border-t border-brand-50">
                 <td className="py-2 font-medium text-brand-800">{a.courseTitle}</td>
-                <td className="py-2 text-brand-600">{a.classes}</td>
-                <td className="py-2 text-brand-600">{a.enrollments}</td>
-                <td className="py-2 text-brand-600">{a.completions}</td>
+                <td className="py-2 text-ink-600">{a.classes}</td>
+                <td className="py-2 text-ink-600">{a.enrollments}</td>
+                <td className="py-2 text-ink-600">{a.completions}</td>
                 <td className="py-2 font-semibold text-brand-800">
                   {a.avgDelta === null ? "—" : `${a.avgDelta >= 0 ? "+" : ""}${a.avgDelta}`}
                 </td>
@@ -58,7 +58,7 @@ export default async function AdminReporting() {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="card text-center">
-      <p className="text-xs uppercase tracking-wide text-brand-500">{label}</p>
+      <p className="text-xs uppercase tracking-wide text-ink-500">{label}</p>
       <p className="text-xl font-bold text-brand-900">{value}</p>
     </div>
   );

@@ -16,9 +16,9 @@ export default async function ResourcesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <Link href="/parent" className="text-sm text-brand-600">← Home</Link>
+        <Link href="/parent" className="text-sm text-ink-600">← Home</Link>
         <h1 className="mt-1 text-xl font-bold text-brand-900">Resources</h1>
-        <p className="text-sm text-brand-600">
+        <p className="text-sm text-ink-600">
           Personalized matches from each child's IEP + profile, plus DDE's full partner directory.
         </p>
       </div>
@@ -26,7 +26,7 @@ export default async function ResourcesPage() {
       {childRecs.map(({ child, recs }) => {
         return (
           <section key={child.id}>
-            <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-brand-600">
+            <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-600">
               For {child.displayName}
             </h2>
             <RecommendationList recs={recs} />
@@ -35,7 +35,7 @@ export default async function ResourcesPage() {
       })}
 
       <section>
-        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-brand-600">
+        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-600">
           DDE partner directory
         </h2>
         <ul className="space-y-3">
@@ -49,11 +49,11 @@ export default async function ResourcesPage() {
                 <div className="p-4">
                   <div className="flex items-center justify-between gap-2">
                     <p className="font-semibold text-brand-900">{p.name}</p>
-                    <span className="pill bg-brand-50 text-brand-600">{p.category}</span>
+                    <span className="pill bg-brand-50 text-ink-600">{p.category}</span>
                   </div>
-                  {p.tagline && <p className="mt-0.5 text-sm italic text-brand-600">{p.tagline}</p>}
+                  {p.tagline && <p className="mt-0.5 text-sm italic text-ink-600">{p.tagline}</p>}
                   {p.insuranceAccepted.length > 0 && (
-                    <p className="mt-1 text-xs text-brand-500">Insurance: {p.insuranceAccepted.join(" · ")}</p>
+                    <p className="mt-1 text-xs text-ink-500">Insurance: {p.insuranceAccepted.join(" · ")}</p>
                   )}
                 </div>
               </Link>

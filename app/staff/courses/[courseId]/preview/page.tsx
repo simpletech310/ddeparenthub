@@ -17,10 +17,10 @@ export default async function CoursePreview({ params }: { params: { courseId: st
   return (
     <div className="space-y-5">
       <div>
-        <Link href={`/staff/courses/${course.id}`} className="text-sm text-brand-600">← Editor</Link>
+        <Link href={`/staff/courses/${course.id}`} className="text-sm text-ink-600">← Editor</Link>
         <h1 className="mt-1 text-xl font-bold text-brand-900">{course.title}</h1>
-        <p className="text-sm text-brand-600">{course.description}</p>
-        <p className="mt-1 text-xs text-brand-400">Preview — this is the parent's view.</p>
+        <p className="text-sm text-ink-600">{course.description}</p>
+        <p className="mt-1 text-xs text-ink-400">Preview — this is the parent's view.</p>
       </div>
 
       <QuizPreview title="Pre-test" questions={pre ? questions.filter((q) => q.assessmentId === pre.id) : []} />
@@ -36,7 +36,7 @@ export default async function CoursePreview({ params }: { params: { courseId: st
             {blocks.length ? <LessonContent blocks={blocks} /> : <p className="text-sm text-accent-600">⚠ No content yet.</p>}
             {checkQs.length > 0 && (
               <div className="mt-2">
-                <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-brand-600">Lesson check</h3>
+                <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-600">Lesson check</h3>
                 <QuizList questions={checkQs} />
               </div>
             )}
@@ -59,14 +59,14 @@ function QuizPreview({ title, questions }: { title: string; questions: Question[
 }
 
 function QuizList({ questions }: { questions: Question[] }) {
-  if (!questions.length) return <p className="text-sm text-brand-400">No questions.</p>;
+  if (!questions.length) return <p className="text-sm text-ink-400">No questions.</p>;
   return (
     <ol className="space-y-2">
       {questions.map((q, i) => (
         <li key={q.id} className="text-sm">
           <p className="font-medium text-brand-800">{i + 1}. {q.prompt}</p>
           {q.options.length > 0 && (
-            <ul className="mt-1 space-y-0.5 pl-4 text-brand-600">
+            <ul className="mt-1 space-y-0.5 pl-4 text-ink-600">
               {q.options.map((o, oi) => {
                 const correct = Array.isArray(q.answerKey) && (q.answerKey as number[]).includes(oi);
                 return (

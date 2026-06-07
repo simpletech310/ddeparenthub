@@ -15,7 +15,7 @@ export function AddQuestionForm({
 
   return (
     <details className="mt-2">
-      <summary className="cursor-pointer text-xs font-medium text-brand-600">+ Add question</summary>
+      <summary className="cursor-pointer text-xs font-medium text-ink-600">+ Add question</summary>
       <form action={addQuestionAction} className="mt-2 space-y-2 rounded-lg bg-brand-50 p-2">
         <input type="hidden" name="courseId" value={courseId} />
         <input type="hidden" name="target" value={target} />

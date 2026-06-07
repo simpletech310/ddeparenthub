@@ -25,9 +25,9 @@ export default async function ClassRoster({ params }: { params: { classId: strin
   return (
     <div className="space-y-5">
       <div>
-        <Link href="/staff" className="text-sm text-brand-600">← Dashboard</Link>
+        <Link href="/staff" className="text-sm text-ink-600">← Dashboard</Link>
         <h1 className="mt-1 text-xl font-bold text-brand-900">{cls.title}</h1>
-        <p className="text-sm text-brand-600">{cls.schedule}</p>
+        <p className="text-sm text-ink-600">{cls.schedule}</p>
       </div>
 
       {/* Event details */}
@@ -50,10 +50,10 @@ export default async function ClassRoster({ params }: { params: { classId: strin
         {cls.deliveryMode === "telehealth" && cls.meetingLink && (
           <p className="text-brand-800">
             <span className="font-medium">Meeting link:</span>{" "}
-            <a href={cls.meetingLink} className="text-brand-600 underline" target="_blank" rel="noreferrer">{cls.meetingLink}</a>
+            <a href={cls.meetingLink} className="text-ink-600 underline" target="_blank" rel="noreferrer">{cls.meetingLink}</a>
           </p>
         )}
-        {cls.description && <p className="text-brand-600">{cls.description}</p>}
+        {cls.description && <p className="text-ink-600">{cls.description}</p>}
       </section>
 
       <div className="grid grid-cols-3 gap-3">
@@ -71,7 +71,7 @@ export default async function ClassRoster({ params }: { params: { classId: strin
               <li key={e.id} className="flex items-center justify-between gap-2">
                 <div>
                   <p className="text-sm font-medium text-brand-800">{name}</p>
-                  <p className="text-[11px] text-brand-400">
+                  <p className="text-[11px] text-ink-400">
                     {e.attendance === "present"
                       ? `Checked in${e.checkedInAt ? " " + new Date(e.checkedInAt).toLocaleTimeString() : ""}`
                       : e.attendance === "absent"
@@ -92,7 +92,7 @@ export default async function ClassRoster({ params }: { params: { classId: strin
                             ? s === "present"
                               ? "bg-brand-600 text-white"
                               : "bg-accent-500 text-white"
-                            : "bg-brand-50 text-brand-600 hover:bg-brand-100"
+                            : "bg-brand-50 text-ink-600 hover:bg-brand-100"
                         }`}
                       >
                         {s === "present" ? "Present" : "Absent"}
@@ -103,7 +103,7 @@ export default async function ClassRoster({ params }: { params: { classId: strin
               </li>
             );
           })}
-          {!enrollments.length && <li className="text-sm text-brand-400">No RSVPs yet.</li>}
+          {!enrollments.length && <li className="text-sm text-ink-400">No RSVPs yet.</li>}
         </ul>
       </section>
 
@@ -112,7 +112,7 @@ export default async function ClassRoster({ params }: { params: { classId: strin
         <h2 className="mb-2 font-semibold text-brand-900">Roster & scores</h2>
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-left text-xs uppercase tracking-wide text-brand-500">
+            <tr className="text-left text-xs uppercase tracking-wide text-ink-500">
               <th className="py-1.5">Parent</th><th className="py-1.5">Pre</th><th className="py-1.5">Post</th><th className="py-1.5">Δ</th><th className="py-1.5">Done</th>
             </tr>
           </thead>
@@ -120,13 +120,13 @@ export default async function ClassRoster({ params }: { params: { classId: strin
             {roster.map((r) => (
               <tr key={r.enrollmentId} className="border-t border-brand-50">
                 <td className="py-2 font-medium text-brand-800">{r.parentName}</td>
-                <td className="py-2 text-brand-600">{r.preScore === null ? "—" : `${r.preScore}/${r.preMax}`}</td>
-                <td className="py-2 text-brand-600">{r.postScore === null ? "—" : `${r.postScore}/${r.postMax}`}</td>
+                <td className="py-2 text-ink-600">{r.preScore === null ? "—" : `${r.preScore}/${r.preMax}`}</td>
+                <td className="py-2 text-ink-600">{r.postScore === null ? "—" : `${r.postScore}/${r.postMax}`}</td>
                 <td className="py-2 font-semibold text-brand-800">{r.delta === null ? "—" : `${r.delta >= 0 ? "+" : ""}${r.delta}`}</td>
-                <td className="py-2 text-brand-600">{r.completionPct}%</td>
+                <td className="py-2 text-ink-600">{r.completionPct}%</td>
               </tr>
             ))}
-            {!roster.length && <tr><td colSpan={5} className="py-3 text-center text-brand-400">No parents enrolled yet.</td></tr>}
+            {!roster.length && <tr><td colSpan={5} className="py-3 text-center text-ink-400">No parents enrolled yet.</td></tr>}
           </tbody>
         </table>
       </section>
@@ -138,7 +138,7 @@ export default async function ClassRoster({ params }: { params: { classId: strin
             <li key={i}>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-brand-700">{p.lessonTitle}</span>
-                <span className="text-xs text-brand-500">{p.passRate}% pass ({p.attempts})</span>
+                <span className="text-xs text-ink-500">{p.passRate}% pass ({p.attempts})</span>
               </div>
               <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-brand-100">
                 <div className={`h-full ${p.passRate >= 60 ? "bg-brand-500" : "bg-accent-500"}`} style={{ width: `${p.passRate}%` }} />
@@ -146,7 +146,7 @@ export default async function ClassRoster({ params }: { params: { classId: strin
             </li>
           ))}
         </ul>
-        <p className="mt-3 text-xs text-brand-400">Learning scores only — never any parent's private documents.</p>
+        <p className="mt-3 text-xs text-ink-400">Learning scores only — never any parent's private documents.</p>
       </section>
     </div>
   );
@@ -155,7 +155,7 @@ export default async function ClassRoster({ params }: { params: { classId: strin
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="card text-center">
-      <p className="text-xs uppercase tracking-wide text-brand-500">{label}</p>
+      <p className="text-xs uppercase tracking-wide text-ink-500">{label}</p>
       <p className="text-xl font-bold text-brand-900">{value}</p>
     </div>
   );

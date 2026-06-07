@@ -31,7 +31,7 @@ export default async function EditPartner({ params }: { params: { partnerId: str
   return (
     <div className="space-y-5">
       <div>
-        <Link href="/admin/partners" className="text-sm text-brand-600">← Partners</Link>
+        <Link href="/admin/partners" className="text-sm text-ink-600">← Partners</Link>
         <h1 className="mt-1 text-xl font-bold text-brand-900">Edit {p.name}</h1>
       </div>
       <form action={updatePartnerAction} className="card space-y-3">

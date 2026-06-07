@@ -4,7 +4,7 @@ import type { Recommendation } from "@/lib/data/recommendations";
 export function RecommendationList({ recs }: { recs: Recommendation[] }) {
   if (!recs.length) {
     return (
-      <p className="card text-sm text-brand-500">
+      <p className="card text-sm text-ink-500">
         No matches yet. Add interests/needs to the child profile, or upload an IEP, and grounded
         suggestions will appear here.
       </p>
@@ -22,7 +22,7 @@ export function RecommendationList({ recs }: { recs: Recommendation[] }) {
             <div className="flex items-start justify-between gap-2">
               <div>
                 <p className="font-semibold text-brand-900">{r.title}</p>
-                <p className="text-xs text-brand-500">{r.subtitle}</p>
+                <p className="text-xs text-ink-500">{r.subtitle}</p>
               </div>
               <span className={`pill ${r.kind === "partner" ? "bg-accent-100 text-accent-700" : "bg-brand-100 text-brand-700"}`}>
                 {r.kind === "partner" ? "Partner" : "DDE class"}
@@ -30,13 +30,13 @@ export function RecommendationList({ recs }: { recs: Recommendation[] }) {
             </div>
 
             {r.kind === "partner" && r.partner?.tagline && (
-              <p className="mt-1 text-sm italic text-brand-600">{r.partner.tagline}</p>
+              <p className="mt-1 text-sm italic text-ink-600">{r.partner.tagline}</p>
             )}
 
             <p className="mt-2 text-sm text-brand-700">{r.explanation}</p>
 
             {r.kind === "partner" && r.partner && r.partner.insuranceAccepted.length > 0 && (
-              <p className="mt-2 text-xs text-brand-600">
+              <p className="mt-2 text-xs text-ink-600">
                 <span className="font-medium">Insurance:</span> {r.partner.insuranceAccepted.join(" · ")}
               </p>
             )}
@@ -47,7 +47,7 @@ export function RecommendationList({ recs }: { recs: Recommendation[] }) {
                   <span key={`n_${t}`} className="pill bg-brand-50 text-brand-700">{t.replace(/_/g, " ")}</span>
                 ))}
                 {r.matchedInterests.map((t) => (
-                  <span key={`i_${t}`} className="pill bg-brand-50 text-brand-600">{t.replace(/_/g, " ")}</span>
+                  <span key={`i_${t}`} className="pill bg-brand-50 text-ink-600">{t.replace(/_/g, " ")}</span>
                 ))}
               </div>
             )}

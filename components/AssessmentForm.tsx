@@ -124,7 +124,7 @@ export function AssessmentForm({
           {q.type === "likert" && (
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((n) => (
-                <label key={n} className="flex flex-col items-center text-xs text-brand-600">
+                <label key={n} className="flex flex-col items-center text-xs text-ink-600">
                   <input type="radio" name={`q_${q.id}`} checked={((answers[q.id] as number[]) ?? [])[0] === n} onChange={() => setSingle(q.id, n)} />
                   {n}
                 </label>
@@ -140,10 +140,10 @@ export function AssessmentForm({
             <ol className="space-y-1.5">
               {((answers[q.id] as number[]) ?? []).map((origIdx, pos) => (
                 <li key={origIdx} className="flex items-center gap-2 rounded-lg border border-brand-100 bg-white px-3 py-2 text-sm text-brand-800">
-                  <span className="font-semibold text-brand-400">{pos + 1}.</span>
+                  <span className="font-semibold text-ink-400">{pos + 1}.</span>
                   <span className="flex-1">{q.options[origIdx]}</span>
-                  <button type="button" onClick={() => move(q.id, pos, -1)} disabled={pos === 0} className="rounded px-2 py-0.5 text-brand-500 disabled:opacity-30" aria-label="Move up">↑</button>
-                  <button type="button" onClick={() => move(q.id, pos, 1)} disabled={pos === q.options.length - 1} className="rounded px-2 py-0.5 text-brand-500 disabled:opacity-30" aria-label="Move down">↓</button>
+                  <button type="button" onClick={() => move(q.id, pos, -1)} disabled={pos === 0} className="rounded px-2 py-0.5 text-ink-500 disabled:opacity-30" aria-label="Move up">↑</button>
+                  <button type="button" onClick={() => move(q.id, pos, 1)} disabled={pos === q.options.length - 1} className="rounded px-2 py-0.5 text-ink-500 disabled:opacity-30" aria-label="Move down">↓</button>
                 </li>
               ))}
             </ol>
@@ -154,7 +154,7 @@ export function AssessmentForm({
               {q.options.map((left, leftIdx) => (
                 <div key={leftIdx} className="flex items-center gap-2">
                   <span className="flex-1 text-sm text-brand-800">{left}</span>
-                  <span className="text-brand-400">→</span>
+                  <span className="text-ink-400">→</span>
                   <select
                     className="input flex-1"
                     value={((answers[q.id] as number[]) ?? [])[leftIdx] ?? -1}

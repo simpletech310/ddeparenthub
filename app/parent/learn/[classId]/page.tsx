@@ -24,7 +24,7 @@ export default async function ClassDetail({
   return (
     <div className="space-y-5">
       <div>
-        <Link href="/parent/learn" className="text-sm text-brand-600">← Events</Link>
+        <Link href="/parent/learn" className="text-sm text-ink-600">← Events</Link>
       </div>
 
       {cls.coverImage && (
@@ -40,7 +40,7 @@ export default async function ClassDetail({
           </span>
         </div>
         <p className="mt-1 text-sm font-medium text-brand-700">{when}</p>
-        {cls.schedule && <p className="text-xs text-brand-500">{cls.schedule}</p>}
+        {cls.schedule && <p className="text-xs text-ink-500">{cls.schedule}</p>}
       </div>
 
       <section className="card">
@@ -49,7 +49,7 @@ export default async function ClassDetail({
         <p className="mt-2 text-sm text-brand-700">
           <span className="font-medium">What you'll gain:</span> {course.outcomes}
         </p>
-        <p className="mt-2 text-xs text-brand-500">Estimated time: {course.estimatedDuration}</p>
+        <p className="mt-2 text-xs text-ink-500">Estimated time: {course.estimatedDuration}</p>
       </section>
 
       {/* Join info — only after RSVP */}
@@ -67,7 +67,7 @@ export default async function ClassDetail({
                 Join the meeting
               </a>
             ) : (
-              <p className="mt-2 text-sm text-brand-600">The meeting link will appear here before the event.</p>
+              <p className="mt-2 text-sm text-ink-600">The meeting link will appear here before the event.</p>
             )
           ) : (
             <p className="mt-2 text-sm text-brand-700">
@@ -80,9 +80,9 @@ export default async function ClassDetail({
       <section className="card">
         <h2 className="mb-2 font-semibold text-brand-900">Course included</h2>
         <ol className="list-decimal space-y-1 pl-5 text-sm text-brand-700">
-          <li className="font-medium text-brand-600">Pre-test (sets your baseline)</li>
+          <li className="font-medium text-ink-600">Pre-test (sets your baseline)</li>
           {lessons.map((l) => <li key={l.id}>{l.title}</li>)}
-          <li className="font-medium text-brand-600">Post-test (measures your growth)</li>
+          <li className="font-medium text-ink-600">Post-test (measures your growth)</li>
         </ol>
       </section>
 
@@ -100,7 +100,7 @@ export default async function ClassDetail({
           <button className="btn-primary w-full" type="submit">RSVP ({seats} seats left)</button>
         </form>
       ) : (
-        <button className="btn w-full bg-brand-100 text-brand-400" disabled>This event is full</button>
+        <button className="btn w-full bg-brand-100 text-ink-400" disabled>This event is full</button>
       )}
     </div>
   );

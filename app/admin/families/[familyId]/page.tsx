@@ -33,7 +33,7 @@ export default async function AdminFamilyDetail({ params }: { params: { familyId
   return (
     <div className="space-y-5">
       <div>
-        <Link href="/admin/families" className="text-sm text-brand-600">← Families</Link>
+        <Link href="/admin/families" className="text-sm text-ink-600">← Families</Link>
         <h1 className="mt-1 text-xl font-bold text-brand-900">{family.name}</h1>
       </div>
 
@@ -43,7 +43,7 @@ export default async function AdminFamilyDetail({ params }: { params: { familyId
         <ul className="space-y-1.5">
           {assignedStaff.map((s) => (
             <li key={s.id} className="flex items-center justify-between text-sm">
-              <span className="text-brand-800">{s.name} <span className="text-xs text-brand-400">{s.title}</span></span>
+              <span className="text-brand-800">{s.name} <span className="text-xs text-ink-400">{s.title}</span></span>
               <form action={unassignStaffAction}>
                 <input type="hidden" name="familyId" value={family.id} />
                 <input type="hidden" name="staffId" value={s.id} />
@@ -51,7 +51,7 @@ export default async function AdminFamilyDetail({ params }: { params: { familyId
               </form>
             </li>
           ))}
-          {!assignedStaff.length && <li className="text-sm text-brand-400">No staff assigned.</li>}
+          {!assignedStaff.length && <li className="text-sm text-ink-400">No staff assigned.</li>}
         </ul>
         {unassignedStaff.length > 0 && (
           <form action={assignStaffAction} className="flex gap-2">
@@ -67,8 +67,8 @@ export default async function AdminFamilyDetail({ params }: { params: { familyId
       <section className="card space-y-3">
         <h2 className="font-semibold text-brand-900">Parents in this family</h2>
         <ul className="space-y-1 text-sm">
-          {parents.map((p) => <li key={p.id} className="text-brand-800">{p.name} <span className="text-xs text-brand-400">{p.email}</span></li>)}
-          {!parents.length && <li className="text-sm text-brand-400">No parents linked.</li>}
+          {parents.map((p) => <li key={p.id} className="text-brand-800">{p.name} <span className="text-xs text-ink-400">{p.email}</span></li>)}
+          {!parents.length && <li className="text-sm text-ink-400">No parents linked.</li>}
         </ul>
         {unlinkedParents.length > 0 && (
           <form action={addParentToFamilyAction} className="flex gap-2">
@@ -83,7 +83,7 @@ export default async function AdminFamilyDetail({ params }: { params: { familyId
 
       {/* The family file (admin sees everything) */}
       <section>
-        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-brand-600">Family file</h2>
+        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-600">Family file</h2>
         <FamilyFile user={user} familyId={params.familyId} />
       </section>
     </div>

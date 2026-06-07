@@ -25,12 +25,12 @@ export default async function GoalDetail({ params }: { params: { goalId: string 
   return (
     <div className="space-y-5">
       <div>
-        <Link href={`/parent/track/child/${goal.childId}`} className="text-sm text-brand-600">
+        <Link href={`/parent/track/child/${goal.childId}`} className="text-sm text-ink-600">
           ← {child?.displayName ?? "Child"}'s progress
         </Link>
         <div className="mt-1 flex items-center gap-2">
           <span className="pill bg-brand-100 text-brand-700">{goal.domain}</span>
-          <span className={`pill ${goal.source === "iep" ? "bg-brand-50 text-brand-600" : "bg-accent-50 text-accent-700"}`}>
+          <span className={`pill ${goal.source === "iep" ? "bg-brand-50 text-ink-600" : "bg-accent-50 text-accent-700"}`}>
             {goal.source === "iep" ? "From IEP" : "Custom"}
           </span>
         </div>
@@ -74,7 +74,7 @@ export default async function GoalDetail({ params }: { params: { goalId: string 
           <label className="label" htmlFor="media">Add a photo or video (optional)</label>
           <input id="media" name="media" type="file" accept="image/*,video/*" className="input" />
           <input name="mediaUrl" className="input mt-2" placeholder="…or paste an image/video link" />
-          <p className="mt-1 text-xs text-brand-500">Photos/short videos up to ~5MB. Private to your family.</p>
+          <p className="mt-1 text-xs text-ink-500">Photos/short videos up to ~5MB. Private to your family.</p>
         </div>
         <button className="btn-primary w-full" type="submit">Save observation</button>
       </form>
@@ -88,7 +88,7 @@ export default async function GoalDetail({ params }: { params: { goalId: string 
               <li key={e.id} className="border-l-2 border-brand-200 pl-3">
                 <div className="flex items-center justify-between">
                   <span className="pill bg-brand-50 text-brand-700">{RATING_LABEL[e.simpleRating]}</span>
-                  <span className="text-xs text-brand-400">{new Date(e.observedAt).toLocaleDateString()}</span>
+                  <span className="text-xs text-ink-400">{new Date(e.observedAt).toLocaleDateString()}</span>
                 </div>
                 {e.note && <p className="mt-1 text-sm text-brand-700">{e.note}</p>}
                 {e.mediaUrl && e.mediaType === "image" && (
@@ -102,7 +102,7 @@ export default async function GoalDetail({ params }: { params: { goalId: string 
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-brand-500">No observations yet — log your first one above.</p>
+          <p className="text-sm text-ink-500">No observations yet — log your first one above.</p>
         )}
       </section>
 
@@ -120,7 +120,7 @@ function I({ value, label }: { value: string; label: string }) {
   return (
     <div className="flex-1">
       <p className="text-sm font-bold text-brand-900">{value}</p>
-      <p className="text-[10px] uppercase tracking-wide text-brand-500">{label}</p>
+      <p className="text-[10px] uppercase tracking-wide text-ink-500">{label}</p>
     </div>
   );
 }
@@ -128,9 +128,9 @@ function I({ value, label }: { value: string; label: string }) {
 function Field({ label, value, quote }: { label: string; value: string; quote?: boolean }) {
   return (
     <div>
-      <p className="text-xs font-semibold uppercase tracking-wide text-brand-500">{label}</p>
+      <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">{label}</p>
       {quote ? (
-        <blockquote className="mt-0.5 border-l-2 border-brand-300 pl-3 text-xs italic text-brand-600">“{value}”</blockquote>
+        <blockquote className="mt-0.5 border-l-2 border-brand-300 pl-3 text-xs italic text-ink-600">“{value}”</blockquote>
       ) : (
         <p className="mt-0.5 text-brand-800">{value}</p>
       )}

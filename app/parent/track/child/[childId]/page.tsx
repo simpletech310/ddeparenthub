@@ -21,7 +21,7 @@ export default async function ChildTrack({ params }: { params: { childId: string
   return (
     <div className="space-y-5">
       <div>
-        <Link href="/parent/track" className="text-sm text-brand-600">← Track</Link>
+        <Link href="/parent/track" className="text-sm text-ink-600">← Track</Link>
         <h1 className="mt-1 text-xl font-bold text-brand-900">{child.displayName}'s progress</h1>
       </div>
 
@@ -45,7 +45,7 @@ export default async function ChildTrack({ params }: { params: { childId: string
 
       {/* Goals */}
       <section className="space-y-2">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-brand-600">Goals</h2>
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-600">Goals</h2>
         {goals.map(({ g, entries }) => {
           const last = entries[entries.length - 1];
           const withMedia = [...entries].reverse().find((e) => e.mediaUrl);
@@ -54,11 +54,11 @@ export default async function ChildTrack({ params }: { params: { childId: string
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <span className="pill bg-brand-100 text-brand-700">{g.domain}</span>
-                  <span className={`pill ${g.source === "iep" ? "bg-brand-50 text-brand-600" : "bg-accent-50 text-accent-700"}`}>
+                  <span className={`pill ${g.source === "iep" ? "bg-brand-50 text-ink-600" : "bg-accent-50 text-accent-700"}`}>
                     {g.source === "iep" ? "From IEP" : "Custom"}
                   </span>
                 </div>
-                <span className="text-xs text-brand-500">{entries.length} log{entries.length === 1 ? "" : "s"}</span>
+                <span className="text-xs text-ink-500">{entries.length} log{entries.length === 1 ? "" : "s"}</span>
               </div>
               <p className="mt-1.5 text-sm font-medium text-brand-900">{g.target}</p>
 
@@ -75,11 +75,11 @@ export default async function ChildTrack({ params }: { params: { childId: string
                   )}
                   <div className="text-right">
                     <p className="text-xs font-semibold text-brand-700">{last && RATING_LABEL[last.simpleRating]}</p>
-                    <p className="text-[10px] text-brand-400">{last && new Date(last.observedAt).toLocaleDateString()}</p>
+                    <p className="text-[10px] text-ink-400">{last && new Date(last.observedAt).toLocaleDateString()}</p>
                   </div>
                 </div>
               ) : (
-                <p className="mt-1 text-xs text-brand-400">No notes yet.</p>
+                <p className="mt-1 text-xs text-ink-400">No notes yet.</p>
               )}
 
               <div className="mt-3 flex items-center gap-2">
@@ -94,7 +94,7 @@ export default async function ChildTrack({ params }: { params: { childId: string
           );
         })}
         {!goals.length && (
-          <p className="card text-sm text-brand-500">
+          <p className="card text-sm text-ink-500">
             No goals yet. Upload {child.displayName}'s IEP in{" "}
             <Link href="/parent/understand" className="underline">Understand</Link>, or add one below.
           </p>
@@ -135,7 +135,7 @@ function Mini({ value, label }: { value: string; label: string }) {
   return (
     <div className="rounded-xl bg-brand-50 px-1 py-2">
       <p className="text-base font-bold leading-none text-brand-900">{value}</p>
-      <p className="mt-1 text-[10px] uppercase tracking-wide text-brand-500">{label}</p>
+      <p className="mt-1 text-[10px] uppercase tracking-wide text-ink-500">{label}</p>
     </div>
   );
 }

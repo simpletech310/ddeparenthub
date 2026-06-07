@@ -50,7 +50,7 @@ export default async function CourseEditor({
   return (
     <div className="space-y-5">
       <div>
-        <Link href="/staff" className="text-sm text-brand-600">← Dashboard</Link>
+        <Link href="/staff" className="text-sm text-ink-600">← Dashboard</Link>
         <div className="mt-1 flex flex-wrap items-center gap-2">
           <h1 className="text-xl font-bold text-brand-900">{course.title}</h1>
           <span className={`pill ${course.status === "published" ? "bg-brand-50 text-brand-700" : "bg-accent-50 text-accent-700"}`}>{course.status}</span>
@@ -109,7 +109,7 @@ export default async function CourseEditor({
           {/* Lessons */}
           <section className="space-y-3">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-brand-600">Lessons</h2>
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-600">Lessons</h2>
               <form action={addLessonAction}>
                 <input type="hidden" name="courseId" value={cid} />
                 <button className="btn-ghost py-1.5 text-xs" type="submit">+ Add lesson</button>
@@ -143,11 +143,11 @@ export default async function CourseEditor({
 
                   {/* Content blocks */}
                   <div className="space-y-2">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-brand-500">Content</p>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">Content</p>
                     {blocks.map((b, bi) => (
                       <div key={b.id} className="rounded-lg border border-brand-100 p-2">
                         <div className="mb-1 flex items-center justify-between">
-                          <span className="text-xs font-medium text-brand-600">{b.type.replace(/_/g, " ")}</span>
+                          <span className="text-xs font-medium text-ink-600">{b.type.replace(/_/g, " ")}</span>
                           <div className="flex items-center gap-1">
                             <MoveBtns courseId={cid} action={moveContentBlockAction} idField="blockId" idValue={b.id} extra={{ lessonId: l.id }} disablePrev={bi === 0} disableNext={bi === blocks.length - 1} />
                             <form action={deleteContentBlockAction}>
@@ -165,7 +165,7 @@ export default async function CourseEditor({
                             <button className="btn-ghost mt-1 py-1 text-xs" type="submit">Save text</button>
                           </form>
                         ) : (
-                          <p className="break-all text-xs text-brand-500">{String((b.payload as any).url ?? (b.payload as any).images?.[0]?.url ?? "")}</p>
+                          <p className="break-all text-xs text-ink-500">{String((b.payload as any).url ?? (b.payload as any).images?.[0]?.url ?? "")}</p>
                         )}
                       </div>
                     ))}
@@ -173,7 +173,7 @@ export default async function CourseEditor({
                     {/* Add content */}
                     <div className="flex flex-wrap gap-2">
                       <details>
-                        <summary className="cursor-pointer text-xs font-medium text-brand-600">+ Text</summary>
+                        <summary className="cursor-pointer text-xs font-medium text-ink-600">+ Text</summary>
                         <form action={addContentBlockAction} className="mt-1 space-y-1">
                           <input type="hidden" name="courseId" value={cid} />
                           <input type="hidden" name="lessonId" value={l.id} />
@@ -183,7 +183,7 @@ export default async function CourseEditor({
                         </form>
                       </details>
                       <details>
-                        <summary className="cursor-pointer text-xs font-medium text-brand-600">+ Media</summary>
+                        <summary className="cursor-pointer text-xs font-medium text-ink-600">+ Media</summary>
                         <form action={addContentBlockAction} className="mt-1 space-y-1">
                           <input type="hidden" name="courseId" value={cid} />
                           <input type="hidden" name="lessonId" value={l.id} />
@@ -202,7 +202,7 @@ export default async function CourseEditor({
 
                   {/* Lesson check */}
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-brand-500">Lesson check</p>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">Lesson check</p>
                     <QuestionList courseId={cid} questions={check ? questions.filter((q) => q.assessmentId === check.id) : []} />
                     <AddQuestionForm courseId={cid} target={`lesson:${l.id}`} />
                   </div>
@@ -272,7 +272,7 @@ function MoveBtns({
           <input type="hidden" name={idField} value={idValue} />
           {extra && Object.entries(extra).map(([k, v]) => <input key={k} type="hidden" name={k} value={v} />)}
           <input type="hidden" name="dir" value={dir} />
-          <button className="rounded px-1.5 py-0.5 text-xs text-brand-500 disabled:opacity-30" type="submit" disabled={dir === -1 ? disablePrev : disableNext}>
+          <button className="rounded px-1.5 py-0.5 text-xs text-ink-500 disabled:opacity-30" type="submit" disabled={dir === -1 ? disablePrev : disableNext}>
             {dir === -1 ? "↑" : "↓"}
           </button>
         </form>
@@ -282,14 +282,14 @@ function MoveBtns({
 }
 
 function QuestionList({ courseId, questions }: { courseId: string; questions: Question[] }) {
-  if (!questions.length) return <p className="text-xs text-brand-400">No questions yet.</p>;
+  if (!questions.length) return <p className="text-xs text-ink-400">No questions yet.</p>;
   return (
     <ul className="space-y-1">
       {questions.map((q) => (
         <li key={q.id} className="flex items-start justify-between gap-2 rounded-lg bg-brand-50 px-2 py-1.5">
           <div>
             <p className="text-sm text-brand-800">{q.prompt}</p>
-            <p className="text-[10px] uppercase tracking-wide text-brand-400">{q.type.replace(/_/g, " ")}{q.scored ? "" : " · unscored"}</p>
+            <p className="text-[10px] uppercase tracking-wide text-ink-400">{q.type.replace(/_/g, " ")}{q.scored ? "" : " · unscored"}</p>
           </div>
           <form action={deleteQuestionAction}>
             <input type="hidden" name="courseId" value={courseId} />

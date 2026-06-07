@@ -38,13 +38,13 @@ export async function FamilyFile({ user, familyId }: { user: User; familyId: str
     documentsRaw.map(async (d) => ({ d, bd: await getBreakdownByDoc(user, d.id) }))
   );
 
-  if (!family) return <p className="card text-sm text-brand-500">Family not found.</p>;
+  if (!family) return <p className="card text-sm text-ink-500">Family not found.</p>;
 
   return (
     <div className="space-y-6">
       {/* Data-driven snapshot */}
       <section className="card">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-600">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-600">
           At a glance
         </h2>
         <div className="grid grid-cols-4 gap-2 text-center">
@@ -69,7 +69,7 @@ export async function FamilyFile({ user, familyId }: { user: User; familyId: str
         <p className="text-sm text-brand-700">
           <span className="font-medium">Assigned staff:</span> {staff.map((s) => s.name).join(", ") || "—"}
         </p>
-        <p className="mt-1 text-xs text-brand-400">
+        <p className="mt-1 text-xs text-ink-400">
           Progress below is shared — every assigned staff member sees the same consistent record.
         </p>
       </section>
@@ -79,7 +79,7 @@ export async function FamilyFile({ user, familyId }: { user: User; familyId: str
           <section key={child.id} className="space-y-3">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-brand-900">{child.displayName}</h2>
-              {child.dob && <span className="text-xs text-brand-500">DOB {child.dob}</span>}
+              {child.dob && <span className="text-xs text-ink-500">DOB {child.dob}</span>}
             </div>
 
             {(child.interestTags.length > 0 || child.needTags.length > 0) && (
@@ -102,7 +102,7 @@ export async function FamilyFile({ user, familyId }: { user: User; familyId: str
 
             {/* Goals + home progress trends */}
             <div>
-              <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-brand-600">
+              <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-600">
                 Goals & home progress
               </h3>
               {goals.length ? (
@@ -113,7 +113,7 @@ export async function FamilyFile({ user, familyId }: { user: User; familyId: str
                       <li key={g.id} className="card">
                         <div className="flex items-center justify-between gap-2">
                           <span className="pill bg-brand-100 text-brand-700">{g.domain}</span>
-                          <span className="text-xs text-brand-500">{entries.length} log{entries.length === 1 ? "" : "s"}</span>
+                          <span className="text-xs text-ink-500">{entries.length} log{entries.length === 1 ? "" : "s"}</span>
                         </div>
                         <p className="mt-1 text-sm font-medium text-brand-900">{g.target}</p>
                         {entries.length > 0 ? (
@@ -123,24 +123,24 @@ export async function FamilyFile({ user, familyId }: { user: User; familyId: str
                                 <div key={i} className="flex-1 rounded-t bg-brand-400" style={{ height: `${(e.simpleRating / 5) * 100}%` }} title={`${e.simpleRating}/5`} />
                               ))}
                             </div>
-                            <p className="mt-1 text-xs text-brand-500">Last noted: {RATING_LABEL[last.simpleRating]}</p>
+                            <p className="mt-1 text-xs text-ink-500">Last noted: {RATING_LABEL[last.simpleRating]}</p>
                           </>
                         ) : (
-                          <p className="mt-1 text-xs text-brand-400">No home observations logged yet.</p>
+                          <p className="mt-1 text-xs text-ink-400">No home observations logged yet.</p>
                         )}
                       </li>
                     );
                   })}
                 </ul>
               ) : (
-                <p className="card text-sm text-brand-500">No IEP goals on file for {child.displayName}.</p>
+                <p className="card text-sm text-ink-500">No IEP goals on file for {child.displayName}.</p>
               )}
             </div>
 
             {/* Recommended supports (deterministic) */}
             {recs.length > 0 && (
               <div>
-                <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-brand-600">
+                <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-600">
                   Recommended supports
                 </h3>
                 <ul className="space-y-1.5">
@@ -152,7 +152,7 @@ export async function FamilyFile({ user, familyId }: { user: User; familyId: str
                           {r.kind === "partner" ? "Partner" : "DDE class"}
                         </span>
                       </div>
-                      <p className="mt-1 text-xs text-brand-600">{r.explanation}</p>
+                      <p className="mt-1 text-xs text-ink-600">{r.explanation}</p>
                     </li>
                   ))}
                 </ul>
@@ -164,24 +164,24 @@ export async function FamilyFile({ user, familyId }: { user: User; familyId: str
 
       {/* Documents (read-only breakdowns) */}
       <section>
-        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-brand-600">Documents</h2>
+        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-600">Documents</h2>
         {documents.length ? (
           <div className="space-y-2">
             {documents.map(({ d, bd }) => {
               return (
                 <details key={d.id} className="card">
                   <summary className="cursor-pointer text-sm font-semibold text-brand-900">
-                    {d.fileName} <span className="text-xs font-normal uppercase text-brand-400">({d.docType})</span>
+                    {d.fileName} <span className="text-xs font-normal uppercase text-ink-400">({d.docType})</span>
                   </summary>
                   <div className="mt-3">
-                    {bd ? <BreakdownView payload={bd.payload} docType={d.docType} /> : <p className="text-sm text-brand-500">No breakdown.</p>}
+                    {bd ? <BreakdownView payload={bd.payload} docType={d.docType} /> : <p className="text-sm text-ink-500">No breakdown.</p>}
                   </div>
                 </details>
               );
             })}
           </div>
         ) : (
-          <p className="card text-sm text-brand-500">No documents uploaded by this family yet.</p>
+          <p className="card text-sm text-ink-500">No documents uploaded by this family yet.</p>
         )}
       </section>
     </div>
@@ -192,7 +192,7 @@ function FfStat({ value, label }: { value: string; label: string }) {
   return (
     <div className="rounded-xl bg-brand-50 px-2 py-3">
       <p className="text-lg font-bold leading-none text-brand-900">{value}</p>
-      <p className="mt-1 text-[10px] uppercase tracking-wide text-brand-500">{label}</p>
+      <p className="mt-1 text-[10px] uppercase tracking-wide text-ink-500">{label}</p>
     </div>
   );
 }

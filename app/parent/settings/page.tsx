@@ -27,7 +27,7 @@ export default async function SettingsPage() {
             <option value="12">12 months</option>
             <option value="24">24 months</option>
           </select>
-          <p className="mt-1 text-xs text-brand-500">Applies to documents uploaded after saving. This is a family-wide setting.</p>
+          <p className="mt-1 text-xs text-ink-500">Applies to documents uploaded after saving. This is a family-wide setting.</p>
         </div>
         <button className="btn-primary w-full" type="submit">Save preferences</button>
       </form>
@@ -38,7 +38,7 @@ export default async function SettingsPage() {
           Your family's documents and breakdowns are visible to members of your family, the DDE staff
           assigned to your family, and DDE administration. They are never shared more broadly.
         </p>
-        <p className="mt-2 text-xs text-brand-500">
+        <p className="mt-2 text-xs text-ink-500">
           Consent for AI processing:{" "}
           {family?.consentAcceptedAt
             ? `accepted ${new Date(family.consentAcceptedAt).toLocaleDateString()}`

@@ -13,9 +13,9 @@ export default async function FamilyPage() {
   return (
     <div className="space-y-5">
       <div>
-        <Link href="/parent" className="text-sm text-brand-600">← Home</Link>
+        <Link href="/parent" className="text-sm text-ink-600">← Home</Link>
         <h1 className="mt-1 text-xl font-bold text-brand-900">{family?.name ?? "Your family"}</h1>
-        <p className="text-sm text-brand-600">
+        <p className="text-sm text-ink-600">
           Everyone here shares the same family file — the same documents, goals, and progress.
         </p>
       </div>
@@ -26,11 +26,11 @@ export default async function FamilyPage() {
           {parents.map((p) => (
             <li key={p.id} className="flex items-center justify-between text-sm">
               <span className="text-brand-800">{p.name}{p.id === user.id ? " (you)" : ""}</span>
-              <span className="text-xs text-brand-500">{p.email}</span>
+              <span className="text-xs text-ink-500">{p.email}</span>
             </li>
           ))}
         </ul>
-        <p className="mt-2 text-xs text-brand-500">
+        <p className="mt-2 text-xs text-ink-500">
           Need to add another parent? DDE administration can link them to your family.
         </p>
       </section>
@@ -42,14 +42,14 @@ export default async function FamilyPage() {
             {staff.map((s) => (
               <li key={s.id} className="flex items-center justify-between text-sm">
                 <span className="text-brand-800">{s.name}</span>
-                <span className="pill bg-brand-50 text-brand-600">{s.title ?? "DDE staff"}</span>
+                <span className="pill bg-brand-50 text-ink-600">{s.title ?? "DDE staff"}</span>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-brand-500">No staff assigned yet.</p>
+          <p className="text-sm text-ink-500">No staff assigned yet.</p>
         )}
-        <p className="mt-2 text-xs text-brand-500">
+        <p className="mt-2 text-xs text-ink-500">
           Assigned staff can see your family file to support your child. Progress stays consistent if
           your team changes.
         </p>

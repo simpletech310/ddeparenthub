@@ -39,13 +39,13 @@ export default async function LearnCatalog() {
     <div className="space-y-6">
       <div>
         <h1 className="text-xl font-bold text-brand-900">Learn & events</h1>
-        <p className="text-sm text-brand-600">ABA-informed parent classes and events from DDE's BCBAs.</p>
+        <p className="text-sm text-ink-600">ABA-informed parent classes and events from DDE's BCBAs.</p>
       </div>
 
       {/* Next event hero */}
       {next && (
         <section>
-          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-brand-600">Next event</h2>
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-600">Next event</h2>
           <Link href={`/parent/learn/${next.id}`} className="block overflow-hidden rounded-2xl border border-brand-100 bg-white shadow-sm hover:border-brand-300">
             {next.coverImage && (
               // eslint-disable-next-line @next/next/no-img-element
@@ -57,7 +57,7 @@ export default async function LearnCatalog() {
                 <DeliveryBadge cls={next} />
               </div>
               <p className="mt-1 text-sm font-medium text-brand-700">{fmt(next.startsAt)}</p>
-              <p className="mt-1 text-sm text-brand-600 line-clamp-2">{next.description || next.courseSnapshot.course.description}</p>
+              <p className="mt-1 text-sm text-ink-600 line-clamp-2">{next.description || next.courseSnapshot.course.description}</p>
               <span className="mt-3 inline-flex btn-primary">
                 {enrolledClassIds.has(next.id) ? "View event" : "RSVP"}
               </span>
@@ -68,7 +68,7 @@ export default async function LearnCatalog() {
 
       {myEnrollments.length > 0 && (
         <section>
-          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-brand-600">My events</h2>
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-600">My events</h2>
           <ul className="space-y-2">
             {myEvents.map(({ e, cls }) => {
               if (!cls) return null;
@@ -77,7 +77,7 @@ export default async function LearnCatalog() {
                   <Link href={`/parent/learn/${cls.id}`} className="card flex items-center justify-between hover:border-brand-300">
                     <div>
                       <p className="font-semibold text-brand-900">{cls.title}</p>
-                      <p className="text-xs text-brand-500">{fmt(cls.startsAt)}</p>
+                      <p className="text-xs text-ink-500">{fmt(cls.startsAt)}</p>
                     </div>
                     <span className="pill bg-brand-50 text-brand-700">
                       {e.attendance === "present" ? "Checked in" : e.status === "completed" ? "Completed" : "RSVP'd"}
@@ -91,7 +91,7 @@ export default async function LearnCatalog() {
       )}
 
       <section>
-        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-brand-600">Upcoming events</h2>
+        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-600">Upcoming events</h2>
         <ul className="space-y-2">
           {upcomingCards.map(({ cls, seats }) => {
             const enrolled = enrolledClassIds.has(cls.id);
@@ -103,14 +103,14 @@ export default async function LearnCatalog() {
                     <DeliveryBadge cls={cls} />
                   </div>
                   <p className="mt-1 text-sm font-medium text-brand-700">{fmt(cls.startsAt)}</p>
-                  <p className="mt-1 text-xs text-brand-500">
+                  <p className="mt-1 text-xs text-ink-500">
                     {enrolled ? "You've RSVP'd" : seats > 0 ? `${seats} seats left` : "Full"}
                   </p>
                 </Link>
               </li>
             );
           })}
-          {!upcoming.length && <li className="card text-sm text-brand-500">No upcoming events right now.</li>}
+          {!upcoming.length && <li className="card text-sm text-ink-500">No upcoming events right now.</li>}
         </ul>
       </section>
     </div>

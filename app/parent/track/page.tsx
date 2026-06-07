@@ -32,7 +32,7 @@ export default async function TrackPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-xl font-bold text-brand-900">Track</h1>
-        <p className="text-sm text-brand-600">
+        <p className="text-sm text-ink-600">
           Each child has their own goals and progress. Tap a child to log a quick note, add a photo, or
           manage their goals.
         </p>
@@ -48,7 +48,7 @@ export default async function TrackPage() {
             >
               <div className="flex items-center justify-between">
                 <p className="font-semibold text-brand-900">{child.displayName}</p>
-                <span className="pill bg-brand-50 text-brand-600">Open →</span>
+                <span className="pill bg-brand-50 text-ink-600">Open →</span>
               </div>
               <div className="mt-3 grid grid-cols-4 gap-2 text-center">
                 <Mini value={String(ins.goals)} label="Goals" />
@@ -70,7 +70,7 @@ export default async function TrackPage() {
           );
         })}
         {!children.length && (
-          <p className="card text-sm text-brand-500">
+          <p className="card text-sm text-ink-500">
             Add a child in{" "}
             <Link href="/parent/children" className="underline">Children</Link> to start tracking.
           </p>
@@ -79,9 +79,9 @@ export default async function TrackPage() {
 
       <section className="card">
         <h2 className="font-semibold text-brand-900">Meeting prep</h2>
-        <p className="text-sm text-brand-600">Bring these to your next school meeting.</p>
+        <p className="text-sm text-ink-600">Bring these to your next school meeting.</p>
 
-        <h3 className="mt-3 text-xs font-semibold uppercase tracking-wide text-brand-500">Upcoming dates</h3>
+        <h3 className="mt-3 text-xs font-semibold uppercase tracking-wide text-ink-500">Upcoming dates</h3>
         {upcomingDates.length ? (
           <ul className="mt-1 space-y-1">
             {upcomingDates.map((d, i) => (
@@ -92,16 +92,16 @@ export default async function TrackPage() {
             ))}
           </ul>
         ) : (
-          <p className="mt-1 text-sm text-brand-400">No upcoming dates on file.</p>
+          <p className="mt-1 text-sm text-ink-400">No upcoming dates on file.</p>
         )}
 
-        <h3 className="mt-3 text-xs font-semibold uppercase tracking-wide text-brand-500">Questions to ask</h3>
+        <h3 className="mt-3 text-xs font-semibold uppercase tracking-wide text-ink-500">Questions to ask</h3>
         {questions.length ? (
           <ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-brand-700">
             {questions.map((q, i) => <li key={i}>{q}</li>)}
           </ul>
         ) : (
-          <p className="mt-1 text-sm text-brand-400">Upload a document to generate suggested questions.</p>
+          <p className="mt-1 text-sm text-ink-400">Upload a document to generate suggested questions.</p>
         )}
       </section>
     </div>
@@ -112,7 +112,7 @@ function Mini({ value, label }: { value: string; label: string }) {
   return (
     <div className="rounded-xl bg-brand-50 px-1 py-2">
       <p className="text-base font-bold leading-none text-brand-900">{value}</p>
-      <p className="mt-1 text-[10px] uppercase tracking-wide text-brand-500">{label}</p>
+      <p className="mt-1 text-[10px] uppercase tracking-wide text-ink-500">{label}</p>
     </div>
   );
 }

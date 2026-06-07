@@ -14,7 +14,7 @@ export default async function TemplateLibrary() {
     <div className="space-y-5">
       <div>
         <h1 className="text-xl font-bold text-brand-900">Template library</h1>
-        <p className="text-sm text-brand-600">
+        <p className="text-sm text-ink-600">
           Shared, reusable courses any staff member can clone or launch. Teacher instructions are
           shown so you understand the intent even if you didn't author it.
         </p>
@@ -26,14 +26,14 @@ export default async function TemplateLibrary() {
             <div className="flex items-start justify-between gap-2">
               <div>
                 <p className="font-semibold text-brand-900">{t.title}</p>
-                <p className="text-xs text-brand-500">
+                <p className="text-xs text-ink-500">
                   by {ownerName} · {t.category}
                 </p>
               </div>
               <span className="pill bg-brand-100 text-brand-700">Template</span>
             </div>
-            <p className="mt-1 text-sm text-brand-600">{t.description}</p>
-            <p className="mt-2 rounded-lg bg-brand-50 p-2 text-xs italic text-brand-600">
+            <p className="mt-1 text-sm text-ink-600">{t.description}</p>
+            <p className="mt-2 rounded-lg bg-brand-50 p-2 text-xs italic text-ink-600">
               Teacher note: {t.teacherInstructions}
             </p>
             <div className="mt-3 flex gap-2">
@@ -50,7 +50,7 @@ export default async function TemplateLibrary() {
           </li>
         ))}
         {!templates.length && (
-          <li className="card text-sm text-brand-500">No templates published yet.</li>
+          <li className="card text-sm text-ink-500">No templates published yet.</li>
         )}
       </ul>
     </div>

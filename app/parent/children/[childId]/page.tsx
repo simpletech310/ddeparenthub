@@ -15,9 +15,9 @@ export default async function ChildProfile({ params }: { params: { childId: stri
   return (
     <div className="space-y-5">
       <div>
-        <Link href="/parent/children" className="text-sm text-brand-600">← Children</Link>
+        <Link href="/parent/children" className="text-sm text-ink-600">← Children</Link>
         <h1 className="mt-1 text-xl font-bold text-brand-900">{child.displayName}'s profile</h1>
-        <p className="text-sm text-brand-600">
+        <p className="text-sm text-ink-600">
           The more we know, the better we can match real DDE classes and partner resources.
         </p>
       </div>
@@ -37,12 +37,12 @@ export default async function ChildProfile({ params }: { params: { childId: stri
         <div>
           <label className="label" htmlFor="interestTags">Interests (comma-separated)</label>
           <input id="interestTags" name="interestTags" className="input" defaultValue={child.interestTags.join(", ")} placeholder="animals, horses, outdoors, music" />
-          <p className="mt-1 text-xs text-brand-500">What does {child.displayName} love? These drive resource matches.</p>
+          <p className="mt-1 text-xs text-ink-500">What does {child.displayName} love? These drive resource matches.</p>
         </div>
         <div>
           <label className="label" htmlFor="needTags">Areas of need (comma-separated)</label>
           <input id="needTags" name="needTags" className="input" defaultValue={child.needTags.join(", ")} placeholder="communication, social, group work, outdoor time" />
-          <p className="mt-1 text-xs text-brand-500">Goals from the IEP are also added automatically.</p>
+          <p className="mt-1 text-xs text-ink-500">Goals from the IEP are also added automatically.</p>
         </div>
         <div>
           <label className="label" htmlFor="temperament">Temperament</label>
@@ -60,7 +60,7 @@ export default async function ChildProfile({ params }: { params: { childId: stri
       </form>
 
       <section>
-        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-brand-600">
+        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-600">
           Recommended supports for {child.displayName}
         </h2>
         <RecommendationList recs={recs} />

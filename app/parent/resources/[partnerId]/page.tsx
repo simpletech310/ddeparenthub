@@ -10,7 +10,7 @@ export default async function PartnerDetail({ params }: { params: { partnerId: s
 
   return (
     <div className="space-y-5">
-      <Link href="/parent/resources" className="text-sm text-brand-600">← Resources</Link>
+      <Link href="/parent/resources" className="text-sm text-ink-600">← Resources</Link>
 
       {p.imageUrl && (
         // eslint-disable-next-line @next/next/no-img-element
@@ -19,22 +19,22 @@ export default async function PartnerDetail({ params }: { params: { partnerId: s
 
       <div>
         <h1 className="text-xl font-bold text-brand-900">{p.name}</h1>
-        <span className="pill bg-brand-50 text-brand-600">{p.category}</span>
-        {p.tagline && <p className="mt-2 text-sm italic text-brand-600">{p.tagline}</p>}
+        <span className="pill bg-brand-50 text-ink-600">{p.category}</span>
+        {p.tagline && <p className="mt-2 text-sm italic text-ink-600">{p.tagline}</p>}
       </div>
 
       <section className="card space-y-3">
         <div>
-          <h2 className="text-xs font-semibold uppercase tracking-wide text-brand-500">What they do</h2>
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-ink-500">What they do</h2>
           <p className="text-sm text-brand-800">{p.description}</p>
         </div>
         <div>
-          <h2 className="text-xs font-semibold uppercase tracking-wide text-brand-500">How they help</h2>
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-ink-500">How they help</h2>
           <p className="text-sm text-brand-800">{p.howTheyHelp}</p>
         </div>
         {p.services.length > 0 && (
           <div>
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-brand-500">Services</h2>
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-ink-500">Services</h2>
             <ul className="list-disc pl-5 text-sm text-brand-700">
               {p.services.map((s, i) => <li key={i}>{s}</li>)}
             </ul>
@@ -59,10 +59,10 @@ export default async function PartnerDetail({ params }: { params: { partnerId: s
         {p.phone && <p className="text-brand-700">📞 {p.phone}</p>}
         {p.email && <p className="text-brand-700">✉️ {p.email}</p>}
         {p.website && <p className="text-brand-700">🌐 {p.website}</p>}
-        {p.address && <p className="text-brand-500">📍 {p.address}</p>}
+        {p.address && <p className="text-ink-500">📍 {p.address}</p>}
       </section>
 
-      <p className="text-xs text-brand-400">
+      <p className="text-xs text-ink-400">
         DDE partners are independent organizations. DDE shares this directory to help families find
         supportive resources; please vet any provider and confirm coverage for your child's needs.
       </p>

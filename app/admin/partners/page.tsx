@@ -12,7 +12,7 @@ export default async function AdminPartners() {
     <div className="space-y-5">
       <div>
         <h1 className="text-xl font-bold text-brand-900">Partner directory</h1>
-        <p className="text-sm text-brand-600">
+        <p className="text-sm text-ink-600">
           Organizations DDE partners with. Tags drive the recommendations families see — match them to
           child interests (e.g. <em>horses, outdoors</em>) and needs (e.g. <em>social, group_work</em>).
         </p>
@@ -26,15 +26,15 @@ export default async function AdminPartners() {
                 <Link href={`/admin/partners/${p.id}`} className="font-semibold text-brand-900 hover:underline">
                   {p.name}
                 </Link>
-                <p className="text-xs text-brand-500">{p.category}</p>
+                <p className="text-xs text-ink-500">{p.category}</p>
               </div>
-              <span className={`pill ${p.status === "active" ? "bg-brand-50 text-brand-700" : "bg-brand-100 text-brand-400"}`}>
+              <span className={`pill ${p.status === "active" ? "bg-brand-50 text-brand-700" : "bg-brand-100 text-ink-400"}`}>
                 {p.status}
               </span>
             </div>
             <div className="mt-2 flex flex-wrap gap-1">
               {p.needTags.map((t) => <span key={t} className="pill bg-accent-50 text-accent-700">{t.replace(/_/g, " ")}</span>)}
-              {p.interestTags.map((t) => <span key={t} className="pill bg-brand-50 text-brand-600">{t.replace(/_/g, " ")}</span>)}
+              {p.interestTags.map((t) => <span key={t} className="pill bg-brand-50 text-ink-600">{t.replace(/_/g, " ")}</span>)}
             </div>
             <div className="mt-2 flex gap-2">
               <Link href={`/admin/partners/${p.id}`} className="btn-ghost py-1.5 text-xs">Edit</Link>

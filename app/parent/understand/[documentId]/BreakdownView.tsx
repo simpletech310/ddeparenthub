@@ -21,21 +21,21 @@ export function BreakdownView({
 
       {/* Language toggle */}
       <div className="flex items-center gap-2">
-        <span className="text-xs font-medium text-brand-600">Language:</span>
+        <span className="text-xs font-medium text-ink-600">Language:</span>
         <div className="inline-flex overflow-hidden rounded-lg border border-brand-200 text-xs">
           {(["en", "es"] as const).map((l) => (
             <button
               key={l}
               onClick={() => setLang(l)}
               className={`px-3 py-1 font-medium ${
-                lang === l ? "bg-brand-600 text-white" : "bg-white text-brand-600"
+                lang === l ? "bg-brand-600 text-white" : "bg-white text-ink-600"
               }`}
             >
               {l === "en" ? "English" : "Español"}
             </button>
           ))}
         </div>
-        <span className="text-[10px] text-brand-400">Original text is never translated.</span>
+        <span className="text-[10px] text-ink-400">Original text is never translated.</span>
       </div>
 
       {/* Summary */}
@@ -65,7 +65,7 @@ export function BreakdownView({
 
       {/* Three-layer item cards */}
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-brand-600">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-600">
           {docType === "iep" ? "Goals, services & accommodations" : "Assessments & findings"}
         </h2>
         {payload.items.map((item) => (
@@ -108,7 +108,7 @@ function ItemCard({
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-brand-500">
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">
           What it means
         </p>
         <p className="mt-0.5 text-sm leading-relaxed text-brand-800">
@@ -117,7 +117,7 @@ function ItemCard({
       </div>
 
       <div className="rounded-xl bg-brand-50 p-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-600">
           What you can do at home
         </p>
         <p className="mt-0.5 text-sm leading-relaxed text-brand-800">
@@ -128,12 +128,12 @@ function ItemCard({
       <div>
         <button
           onClick={() => setShowOriginal((s) => !s)}
-          className="text-xs font-medium text-brand-600 underline"
+          className="text-xs font-medium text-ink-600 underline"
         >
           {showOriginal ? "Hide original text" : "Show original text"}
         </button>
         {showOriginal && (
-          <blockquote className="mt-2 border-l-2 border-brand-300 pl-3 text-xs italic text-brand-600">
+          <blockquote className="mt-2 border-l-2 border-brand-300 pl-3 text-xs italic text-ink-600">
             “{item.whatItSays}”
           </blockquote>
         )}
