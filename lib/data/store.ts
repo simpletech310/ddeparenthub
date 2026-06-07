@@ -31,7 +31,13 @@ async function loadDb(): Promise<Database> {
   }
   try {
     const raw = await downloadState();
-    if (raw) return JSON.parse(raw) as Database;
+    if (raw) {
+      const parsed = JSON.parse(raw) as Database;
+      // Validate shape — if the blob is missing core tables, reseed (self-heal).
+      if (parsed && Array.isArray(parsed.users) && Array.isArray(parsed.courses)) {
+        return parsed;
+      }
+    }
   } catch {
     // fall through to seed
   }
