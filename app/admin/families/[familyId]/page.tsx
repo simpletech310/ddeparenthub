@@ -1,9 +1,7 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireRole } from "@/lib/auth/session";
 import {
   getFamily,
-  isStaffAssigned,
   listFamilyParents,
   listFamilyStaff,
 } from "@/lib/data/families";
@@ -11,9 +9,11 @@ import { listUsers } from "@/lib/data/repos";
 import {
   addParentToFamilyAction,
   assignStaffAction,
+  renameFamilyAction,
   unassignStaffAction,
 } from "@/lib/admin/actions";
 import { FamilyFile } from "@/components/FamilyFile";
+import { PageHeader } from "@/components/PageHeader";
 
 export default async function AdminFamilyDetail({ params }: { params: { familyId: string } }) {
   const user = await requireRole("admin");
@@ -32,10 +32,17 @@ export default async function AdminFamilyDetail({ params }: { params: { familyId
 
   return (
     <div className="space-y-5">
-      <div>
-        <Link href="/admin/families" className="text-sm text-ink-600">← Families</Link>
-        <h1 className="mt-1 text-xl font-bold text-brand-900">{family.name}</h1>
-      </div>
+      <PageHeader backHref="/admin/families" backLabel="Families" eyebrow="Family" title={family.name} />
+
+      {/* Rename */}
+      <form action={renameFamilyAction} className="card flex flex-wrap items-end gap-2">
+        <div className="min-w-[200px] flex-1">
+          <label className="label" htmlFor="familyName">Family name</label>
+          <input id="familyName" name="name" className="input" defaultValue={family.name} />
+        </div>
+        <input type="hidden" name="familyId" value={family.id} />
+        <button className="btn-ghost" type="submit">Rename</button>
+      </form>
 
       {/* Management */}
       <section className="card space-y-3">

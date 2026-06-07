@@ -1,4 +1,5 @@
 import { requireRole } from "@/lib/auth/session";
+import { logout } from "@/lib/auth/actions";
 import { getFamily } from "@/lib/data/families";
 import { deleteFamilyDataAction, updateParentProfileAction, updateSettingsAction } from "@/lib/parent/actions";
 import { updateMyAvatarAction, updateMyProfileAction } from "@/lib/account/actions";
@@ -84,6 +85,14 @@ export default async function SettingsPage() {
           .
         </p>
       </section>
+
+      <form action={logout} className="card flex items-center justify-between">
+        <div>
+          <h2 className="font-display font-bold text-ink-900">Sign out</h2>
+          <p className="text-sm text-ink-500">End your session on this device.</p>
+        </div>
+        <button className="btn-ghost" type="submit">Sign out</button>
+      </form>
 
       <form action={deleteFamilyDataAction} className="rounded-2xl border border-accent-200 bg-accent-50 p-5">
         <h2 className="font-semibold text-accent-800">Delete all family data</h2>

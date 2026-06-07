@@ -3,13 +3,14 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireRole } from "@/lib/auth/session";
-import { createUser, getUser, setUserFamily, setUserStatus } from "@/lib/data/repos";
+import { createUser, getUser, setUserFamily, setUserStatus, updateUserProfile } from "@/lib/data/repos";
 import { id } from "@/lib/data/store";
 import { createSignedUploadUrl } from "@/lib/supabase/storage";
 import {
   assignStaff,
   createFamily,
   unassignStaff,
+  updateFamilySettings,
 } from "@/lib/data/families";
 import {
   createPartner,
@@ -46,6 +47,30 @@ export async function toggleUserStatusAction(formData: FormData): Promise<void> 
   if (!target) return;
   await setUserStatus(userId, target.status === "active" ? "deactivated" : "active");
   revalidatePath("/admin/users");
+}
+
+// Edit an existing user's basics (name, email, staff title) and, for parents, family assignment.
+export async function updateUserAction(formData: FormData): Promise<void> {
+  await requireRole("admin");
+  const userId = String(formData.get("userId") ?? "");
+  const target = await getUser(userId);
+  if (!target) return;
+  const name = String(formData.get("name") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim();
+  const title = String(formData.get("title") ?? "").trim();
+  await updateUserProfile(userId, {
+    name: name || target.name,
+    email: email || target.email,
+    title: target.role === "staff" ? title : target.title,
+  });
+  if (target.role === "parent") {
+    const rawFamily = String(formData.get("familyId") ?? "");
+    await setUserFamily(userId, rawFamily || null);
+  }
+  revalidatePath("/admin/users");
+  revalidatePath(`/admin/users/${userId}`);
+  revalidatePath("/admin/families");
+  redirect("/admin/users");
 }
 
 // ---- Partner directory ----
@@ -149,6 +174,14 @@ export async function createFamilyAction(formData: FormData): Promise<void> {
   const name = String(formData.get("name") ?? "").trim();
   if (name) await createFamily(name);
   revalidatePath("/admin/families");
+}
+export async function renameFamilyAction(formData: FormData): Promise<void> {
+  await requireRole("admin");
+  const familyId = String(formData.get("familyId") ?? "");
+  const name = String(formData.get("name") ?? "").trim();
+  if (familyId && name) await updateFamilySettings(familyId, { name });
+  revalidatePath("/admin/families");
+  revalidatePath(`/admin/families/${familyId}`);
 }
 export async function assignStaffAction(formData: FormData): Promise<void> {
   await requireRole("admin");

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireRole } from "@/lib/auth/session";
 import { listUsers } from "@/lib/data/repos";
 import { toggleUserStatusAction } from "@/lib/admin/actions";
@@ -29,6 +30,7 @@ export default async function AdminUsers() {
             </div>
             <span className={`pill capitalize ${ROLE_STYLE[u.role]}`}>{u.role}</span>
             <span className={`pill ${u.status === "active" ? "bg-brand-50 text-brand-700" : "bg-ink-100 text-ink-500"}`}>{u.status}</span>
+            <Link href={`/admin/users/${u.id}`} className="text-xs font-medium text-brand-600 hover:underline">Edit</Link>
             {u.id !== me.id && (
               <form action={toggleUserStatusAction}>
                 <input type="hidden" name="userId" value={u.id} />

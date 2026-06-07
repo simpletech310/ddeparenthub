@@ -3,6 +3,7 @@ import { requireRole } from "@/lib/auth/session";
 import { accessibleFamilyIds } from "@/lib/auth/access";
 import { getFamily, listFamilyParents } from "@/lib/data/families";
 import { listFamilyChildren } from "@/lib/data/repos";
+import { EmptyState } from "@/components/EmptyState";
 
 export default async function StaffFamilies() {
   const user = await requireRole("staff");
@@ -44,9 +45,11 @@ export default async function StaffFamilies() {
           })}
         </ul>
       ) : (
-        <p className="card text-sm text-ink-500">
-          You aren't assigned to any families yet. An administrator assigns families to staff.
-        </p>
+        <EmptyState
+          icon="users"
+          title="No families assigned yet"
+          hint="An administrator assigns families to staff. Once you're assigned, they'll appear here."
+        />
       )}
     </div>
   );

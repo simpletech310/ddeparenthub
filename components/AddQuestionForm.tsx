@@ -11,7 +11,7 @@ export function AddQuestionForm({
   courseId: string;
   target: string; // "lesson:<id>" | "pretest" | "posttest"
 }) {
-  const [type, setType] = useState<"true_false" | "multiple_choice" | "short_text">("true_false");
+  const [type, setType] = useState<"true_false" | "multiple_choice" | "multi_select" | "short_text">("true_false");
 
   return (
     <details className="mt-2">
@@ -21,7 +21,8 @@ export function AddQuestionForm({
         <input type="hidden" name="target" value={target} />
         <select name="type" value={type} onChange={(e) => setType(e.target.value as typeof type)} className="input py-1.5 text-xs">
           <option value="true_false">True / False</option>
-          <option value="multiple_choice">Multiple choice</option>
+          <option value="multiple_choice">Multiple choice (one answer)</option>
+          <option value="multi_select">Multi-select (several answers)</option>
           <option value="short_text">Short answer</option>
         </select>
         <input name="prompt" className="input py-1.5 text-xs" placeholder="Question prompt" required />
@@ -37,6 +38,13 @@ export function AddQuestionForm({
           <>
             <textarea name="options" className="input min-h-[60px] py-1.5 text-xs" placeholder="One option per line" />
             <input name="correctIndex" type="number" min={0} defaultValue={0} className="input py-1.5 text-xs" placeholder="Correct option # (0 = first)" />
+          </>
+        )}
+
+        {type === "multi_select" && (
+          <>
+            <textarea name="options" className="input min-h-[60px] py-1.5 text-xs" placeholder="One option per line" />
+            <input name="correctIndexes" className="input py-1.5 text-xs" placeholder="Correct option #s, comma-separated (e.g. 0,2)" />
           </>
         )}
 

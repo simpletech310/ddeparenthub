@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requireRole } from "@/lib/auth/session";
 import { getUser, listTemplates } from "@/lib/data/repos";
 import { cloneTemplateAction } from "@/lib/staff/actions";
+import { EmptyState } from "@/components/EmptyState";
 
 export default async function TemplateLibrary() {
   await requireRole("staff");
@@ -49,10 +50,15 @@ export default async function TemplateLibrary() {
             </div>
           </li>
         ))}
-        {!templates.length && (
-          <li className="card text-sm text-ink-500">No templates published yet.</li>
-        )}
       </ul>
+      {!templates.length && (
+        <EmptyState
+          icon="doc"
+          title="No templates published yet"
+          hint="When you publish a course to the template library, it'll appear here for any staff member to clone."
+          cta={{ href: "/staff/courses/new", label: "Create a course" }}
+        />
+      )}
     </div>
   );
 }

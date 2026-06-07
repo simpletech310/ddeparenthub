@@ -61,7 +61,7 @@ export async function setUserLanguage(userId: string, lang: "en" | "es"): Promis
 // Update the acting user's own profile (name, staff title, language, photo).
 export async function updateUserProfile(
   userId: string,
-  patch: Partial<Pick<User, "name" | "title" | "preferredLanguage" | "avatarUrl" | "insurance" | "focus" | "goals">>
+  patch: Partial<Pick<User, "name" | "email" | "title" | "preferredLanguage" | "avatarUrl" | "insurance" | "focus" | "goals">>
 ): Promise<void> {
   await saveDb((db) => {
     const u = db.users.find((x) => x.id === userId);
@@ -696,6 +696,16 @@ export async function deleteFamilyData(user: User, familyId: string): Promise<vo
     db.documentBreakdowns = db.documentBreakdowns.filter((b) => b.familyId !== familyId);
     db.extractedGoals = db.extractedGoals.filter((g) => g.familyId !== familyId);
     db.goalProgress = db.goalProgress.filter((p) => p.familyId !== familyId);
+    // Clean up records that reference this family so we don't leave orphans:
+    // staff assignments, and the family's parents' class enrollments (+ their attempts/progress).
+    db.familyStaffAssignments = db.familyStaffAssignments.filter((a) => a.familyId !== familyId);
+    const parentIds = new Set(db.users.filter((u) => u.role === "parent" && u.familyId === familyId).map((u) => u.id));
+    const removedEnrollmentIds = new Set(
+      db.enrollments.filter((e) => parentIds.has(e.parentId)).map((e) => e.id)
+    );
+    db.enrollments = db.enrollments.filter((e) => !removedEnrollmentIds.has(e.id));
+    db.attempts = db.attempts.filter((a) => !removedEnrollmentIds.has(a.enrollmentId));
+    db.lessonProgress = db.lessonProgress.filter((lp) => !removedEnrollmentIds.has(lp.enrollmentId));
     if (user.role === "parent") {
       const u = db.users.find((x) => x.id === user.id);
       if (u) u.status = "deactivated";

@@ -6,6 +6,7 @@ import {
   listUpcomingClasses,
   seatsRemaining,
 } from "@/lib/data/repos";
+import { EmptyState } from "@/components/EmptyState";
 import type { ClassOffering } from "@/lib/types";
 
 function fmt(iso: string) {
@@ -110,8 +111,14 @@ export default async function LearnCatalog() {
               </li>
             );
           })}
-          {!upcoming.length && <li className="card text-sm text-ink-500">No upcoming events right now.</li>}
         </ul>
+        {!upcoming.length && (
+          <EmptyState
+            icon="calendar"
+            title="No upcoming events right now"
+            hint="New classes and workshops show up here as DDE schedules them. Check back soon."
+          />
+        )}
       </section>
     </div>
   );
