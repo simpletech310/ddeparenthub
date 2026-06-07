@@ -15,7 +15,7 @@
 // so the app always produces a valid breakdown. Either way the result is cached once.
 // =====================================================================
 
-export const PROMPT_VERSION = "2026-06-07.1";
+export const PROMPT_VERSION = "2026-06-07.2";
 
 export const MODEL_SETTINGS = {
   model: "claude-sonnet-4-5",
@@ -74,6 +74,30 @@ and what the child's result means in everyday terms (translate scores/percentile
 value shown. Explain eligibility plainly, give an actionable strengths-and-needs summary, and a
 "questions to ask at the meeting" list. English + Spanish for plain-language layers; never translate
 original values.
+${DOCUMENT_GUARDRAILS}`;
+
+// --- Single-pass document breakdown prompts ---
+// The two-step (extract -> render) calls are too slow for a blocking serverless request,
+// so the live pipeline runs ONE combined call per document with these prompts.
+
+export const IEP_BREAKDOWN_SYSTEM = `${DDE_VOICE_PREAMBLE}
+TASK: Read the IEP and produce a parent-facing breakdown in a single pass. For each goal, service, and
+accommodation that appears in the source, give three layers: "what it says" (the verbatim source text),
+"what it means" (plain ~6th-grade English), and "what you can do" (concrete ABA-informed at-home steps
+plus a simple way to notice progress). Add a 3–5 sentence plain-language summary, surface the key dates,
+and a short "questions to ask your IEP team" list. Also output the IEP goals as trackable records
+(domain, verbatim text, baseline, target/criteria, how measured). Provide BOTH English and Spanish for the
+plain-language layers; never translate the original verbatim text.
+${DOCUMENT_GUARDRAILS}`;
+
+export const TRIENNIAL_BREAKDOWN_SYSTEM = `${DDE_VOICE_PREAMBLE}
+TASK: Read the triennial / psychoeducational evaluation and produce a parent-facing breakdown in a single
+pass. For each assessment, the eligibility determination, and each recommendation in the source, give three
+layers: "what it says" (verbatim), "what it means" (plain English that translates scores/percentiles into
+everyday terms, with the original value shown), and "what you can do". Add a 3–5 sentence plain-language
+summary, surface key dates, and a short "questions to ask at the meeting" list. A triennial has no IEP
+goals, so return an empty goals list. Provide BOTH English and Spanish for the plain-language layers; never
+translate original values.
 ${DOCUMENT_GUARDRAILS}`;
 
 // --- Course builder prompt (§8.1) ---

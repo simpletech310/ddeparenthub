@@ -1,13 +1,15 @@
 import type { BreakdownItem, BreakdownPayload, DocType } from "@/lib/types";
 import {
   PROMPT_VERSION,
-  IEP_EXTRACT_SYSTEM,
-  IEP_RENDER_SYSTEM,
-  TRIENNIAL_EXTRACT_SYSTEM,
-  TRIENNIAL_RENDER_SYSTEM,
+  IEP_BREAKDOWN_SYSTEM,
+  TRIENNIAL_BREAKDOWN_SYSTEM,
 } from "./config";
 import { aiEnabled, generateJson } from "./anthropic";
 import { extractText, hashText } from "./extractText";
+
+// Fast model for the (blocking) document breakdown so it completes well within the
+// serverless timeout. A single combined call returns the full breakdown + goal drafts.
+const BREAKDOWN_MODEL = "claude-haiku-4-5";
 
 // Stubbed document-breakdown pipelines (PRD §5, §6, §8.2), implemented as the SAME
 // two-step shape the real Claude pipeline uses:
@@ -71,24 +73,17 @@ export function processDocumentDeterministic(input: { fileName: string; docType:
   return { ...built, contentHash, promptVersion: PROMPT_VERSION };
 }
 
-// ---------------- Live two-step Claude pipeline ----------------
+// ---------------- Live single-pass Claude pipeline ----------------
 
-const EXTRACT_SCHEMA_IEP = `Return JSON only with this shape (omit fields that are not stated):
-{"keyDates":[{"label":string,"date":"YYYY-MM-DD"}],
+const SCHEMA_IEP = `Return JSON only, EXACTLY this shape (omit array entries not present in the source):
+{"summary":{"en":string,"es":string},
+ "keyDates":[{"label":string,"date":"YYYY-MM-DD"}],
+ "questionsToAsk":[string],
+ "items":[{"category":string,"whatItSays":string,"whatItMeans":{"en":string,"es":string},"whatYouCanDo":{"en":string,"es":string},"confidence":"high"|"low"}],
  "goals":[{"domain":string,"verbatimText":string,"baseline":string,"target":string,"measure":string,"confidence":"high"|"low"}],
- "services":[{"verbatimText":string}],
- "accommodations":[{"verbatimText":string}],
- "placement":string,
  "suggestedCourseTags":[string]}`;
 
-const EXTRACT_SCHEMA_TRIENNIAL = `Return JSON only with this shape (omit fields that are not stated):
-{"keyDates":[{"label":string,"date":"YYYY-MM-DD"}],
- "assessments":[{"verbatimText":string,"confidence":"high"|"low"}],
- "eligibility":{"verbatimText":string},
- "recommendations":[{"verbatimText":string}],
- "suggestedCourseTags":[string]}`;
-
-const RENDER_SCHEMA = `Return JSON only, EXACTLY this shape:
+const SCHEMA_TRIENNIAL = `Return JSON only, EXACTLY this shape (omit array entries not present in the source):
 {"summary":{"en":string,"es":string},
  "keyDates":[{"label":string,"date":"YYYY-MM-DD"}],
  "questionsToAsk":[string],
@@ -97,29 +92,23 @@ const RENDER_SCHEMA = `Return JSON only, EXACTLY this shape:
 
 async function processWithAI(text: string, docType: DocType): Promise<{ payload: BreakdownPayload; goalDrafts: GoalDraft[] }> {
   const isTri = docType === "triennial";
-  const extractSystem = isTri ? TRIENNIAL_EXTRACT_SYSTEM : IEP_EXTRACT_SYSTEM;
-  const renderSystem = isTri ? TRIENNIAL_RENDER_SYSTEM : IEP_RENDER_SYSTEM;
-  const extractSchema = isTri ? EXTRACT_SCHEMA_TRIENNIAL : EXTRACT_SCHEMA_IEP;
+  const system = isTri ? TRIENNIAL_BREAKDOWN_SYSTEM : IEP_BREAKDOWN_SYSTEM;
+  const schema = isTri ? SCHEMA_TRIENNIAL : SCHEMA_IEP;
 
-  // Step 1 — extract structured, source-bound fields.
-  const extracted = await generateJson({
-    system: extractSystem,
-    user: `SOURCE DOCUMENT:\n${text}\n\n${extractSchema}`,
+  // One combined extract+render call (fast model) — keeps the blocking request well under
+  // the serverless timeout while still grounding the output in the source text.
+  const out = await generateJson({
+    system,
+    user: `SOURCE DOCUMENT:\n${text}\n\n${schema}`,
+    model: BREAKDOWN_MODEL,
     maxTokens: 4096,
   });
 
-  // Step 2 — render the parent-facing breakdown from the extracted fields only.
-  const rendered = await generateJson({
-    system: renderSystem,
-    user: `EXTRACTED FIELDS (do not add anything not present here):\n${JSON.stringify(extracted)}\n\n${RENDER_SCHEMA}`,
-    maxTokens: 8192,
-  });
+  const payload = validatePayload(out);
 
-  const payload = validatePayload(rendered);
-
-  // Build trackable goal drafts from the IEP extraction (triennials have none).
-  const goalDrafts: GoalDraft[] = !isTri && Array.isArray(extracted?.goals)
-    ? extracted.goals
+  // Build trackable goal drafts from the IEP output (triennials have none).
+  const goalDrafts: GoalDraft[] = !isTri && Array.isArray(out?.goals)
+    ? out.goals
         .filter((g: any) => g && typeof g.verbatimText === "string" && g.verbatimText.trim())
         .map((g: any) => ({
           domain: str(g.domain) || "Goal",
